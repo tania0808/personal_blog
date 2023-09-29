@@ -1,19 +1,15 @@
 <?php
 
-namespace app\controllers;
+namespace App\Controllers;
 
-use app\core\Application;
-use app\core\Controller;
-use app\core\Request;
+use App\Core\Controller;
+use App\Core\Request;
 
 class SiteController extends Controller {
 
     public function home()
     {
-        $params = [
-            'name' => "Tania",
-        ];
-        return $this->render('home', $params);
+        return $this->render('home');
     }
     public function contact()
     {
