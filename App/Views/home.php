@@ -16,6 +16,7 @@
 				<i class="fas fa-envelope"></i>
 			</a>
 		</div>
+		<a href="/public/assets/portfolio.pdf" download>Download the pdf</a>
 	</div>
 	<div class="h-[400px] flex-1 flex justify-center align-items-center my-auto md:mt-4">
 		<img class="md:w-full max-w-sm	max-w-md h-auto md:mt-4 rounded-lg" src="/public/images/photo.jpg" alt="avatar"/>
