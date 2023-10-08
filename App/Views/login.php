@@ -1,4 +1,6 @@
 <?php
+$this->title = 'Login';
+
 ob_start();
 use App\Core\Form\Form;
 /** @var $model \App\Models\User */

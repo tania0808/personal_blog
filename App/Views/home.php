@@ -1,3 +1,5 @@
+<?php $this->title = 'Home'; ?>
+
 <section id="about" class="w-full flex flex-col md:flex-row mx-auto px-10 md:px-8 py-8">
 	<div class="flex flex-col flex-1 gap-10 justify-center px-0 md:px-10 pb-8 md:pb-0">
 		<span class="text-neutral-500 text-lg font-semibold">Junior Front-End Developer</span>

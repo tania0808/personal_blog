@@ -1,4 +1,6 @@
 <?php
+$this->title = 'Register';
+
 /** @var $model \App\Models\User */
 
 ob_start();
