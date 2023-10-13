@@ -1,4 +1,9 @@
-<?php use App\Core\Form\Form; ?>
+<?php
+/** @var $model \App\Models\User */
+
+ob_start();
+use App\Core\Form\Form;
+?>
 
 <section class="bg-gray-50">
 	<div class="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -8,8 +13,8 @@
 					Create an account
 				</h1>
                 <?php $form = Form::begin('', 'post'); ?>
-				<?php echo $form->field($model, 'firstName', 'text', 'First Name') ?>
-				<?php echo $form->field($model, 'lastName', 'text', 'Last Name' ) ?>
+				<?php echo $form->field($model, 'first_name', 'text', 'First Name') ?>
+				<?php echo $form->field($model, 'last_name', 'text', 'Last Name' ) ?>
 				<?php echo $form->field($model, 'email', 'email', 'Email') ?>
 				<?php echo $form->field($model, 'password', 'password', 'Password') ?>
 				<?php echo $form->field($model, 'confirmPassword', 'password', 'Password confirm') ?>
