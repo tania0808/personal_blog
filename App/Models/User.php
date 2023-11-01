@@ -54,4 +54,9 @@ class User extends UserModel
     {
         return $this->first_name . ' ' . $this->last_name;
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

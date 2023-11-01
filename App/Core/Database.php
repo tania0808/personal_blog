@@ -30,10 +30,13 @@ class Database
             }
             require_once Application::$ROOT_DIR.'/Migrations/'.$migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
-            $instance = new $className;
-            $this->log("Applying migration" . $migration);
+            echo "<pre>";
+            var_dump($className);
+            echo "</pre>";
+            $instance = new $className();
+            $this->log("Applying migration " . $migration);
             $instance->up();
-            $this->log("Applied migration" . $migration);
+            $this->log("Applied migration " . $migration);
             $newMigrations[] = $migration;
         }
 
@@ -66,8 +69,7 @@ class Database
         $string = implode(',', array_map(fn($m) => "('$m')", $migrations));
 
         $statement = $this->pdo->prepare("INSERT INTO migrations (migration) VALUES 
-           ($string)");
-
+           $string");
         $statement->execute();
     }
 

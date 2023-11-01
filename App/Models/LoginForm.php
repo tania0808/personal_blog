@@ -18,7 +18,7 @@ class LoginForm extends Model
 
     public function login()
     {
-        $user =(new User())->findOne(['email' => $this->email]);
+        $user = (new User())->findOne(['email' => $this->email]);
         if(!$user) {
             $this->addError('email', 'This combination of e-mail and password is incorrect');
             return false;

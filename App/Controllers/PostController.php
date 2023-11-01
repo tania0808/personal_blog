@@ -7,28 +7,47 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Models\ContactForm;
+use App\Models\Post;
+use App\Models\User;
+use App\Repositories\PostRepository;
 
 class PostController extends Controller {
 
-    public function home()
+    private PostRepository $postRepository;
+
+    public function __construct()
     {
-        return $this->render('home');
+        $this->postRepository = new PostRepository();
     }
-    public function contact(Request $request, Response $response)
+
+    public function index()
     {
-        $contactForm = new ContactForm();
+        $posts = $this->postRepository->all();
+
+        return $this->render('posts', [
+            'posts' => $posts
+        ]);
+    }
+
+    public function store(Request $request, Response $response)
+    {
+        $post = new Post();
+        $post->setUser(Application::$app->user->getId());
 
         if($request->isPost()) {
-            $contactForm->loadData($request->getBody());
-            if($contactForm->validate() && $contactForm->sendMail()) {
-                Application::$app->session->setFlash('success', 'Your email was successfully sent !');
+            $post->loadData($request->getBody());
+
+            if($post->validate() && $post->save()) {
+                Application::$app->session->setFlash('success', 'Your post was successfully created !');
                 Application::$app->response->redirect('/');
                 exit();
             }
-        }
 
-        return $this->render('contact', [
-            'model' => $contactForm,
-        ] );
+        }
+        return $this->render('newPost', [
+            'model' => $post
+        ]);
     }
+
+    public function show(Post $post) { }
 }
