@@ -8,7 +8,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Models\ContactForm;
 
-class SiteController extends Controller {
+class PostController extends Controller {
 
     public function home()
     {

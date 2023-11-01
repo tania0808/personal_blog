@@ -1,17 +1,24 @@
-<h1>Contact page</h1>
+<?php $this->title = 'Contact';
 
-<form action="" method="post">
-	<div class="form-group">
-		<label>Subject</label>
-		<input type="text" class="form-control" name="subject">
+use App\Core\Form\Form;
+use App\Models\User;
+
+/** @var $model User */
+?>
+<section class="bg-gray-50">
+	<div class="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+		<div class="w-full mt-10 bg-white rounded-lg shadow sm:max-w-md xl:p-0">
+			<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+				<h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">Contact Me</h2>
+                <?php $form = Form::begin('', 'post'); ?>
+                <?php echo $form->field($model, 'subject', 'text', 'Object') ?>
+                <?php echo $form->field($model, 'name', 'text', 'Name') ?>
+                <?php echo $form->field($model, 'email', 'email', 'Email') ?>
+                <?php echo $form->field($model, 'body', 'text', 'Message') ?>
+
+				<button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Send</button>
+                <?php echo Form::end(); ?>
+			</div>
+		</div>
 	</div>
-	<div class="form-group">
-		<label>Email</label>
-		<input type="email" class="form-control" name="email">
-	</div>
-	<div class="form-group">
-		<label>Body</label>
-		<textarea name="body" class="form-control"></textarea>
-	</div>
-	<button type="submit" class="btn btn-primary mt-2">Submit</button>
-</form>
+</section>
