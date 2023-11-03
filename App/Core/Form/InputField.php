@@ -19,7 +19,6 @@ class Field extends BaseField
         parent::__construct($model, $attribute, $label);
     }
 
-
     public function renderInput(): string
     {
         return sprintf('
@@ -32,4 +31,6 @@ class Field extends BaseField
             $this->model->hasError($this->attribute) ? 'border-red-500 focus:border-red-600 placeholder:text-red-500' : '',
         );
     }
+
+
 }

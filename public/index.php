@@ -42,5 +42,6 @@ $app->router->get('/profile', [AuthController::class, 'profile']);
 $app->router->get('/posts', [PostController::class, 'index']);
 $app->router->get('/post/create', [PostController::class, 'store']);
 $app->router->post('/post/create', [PostController::class, 'store']);
+$app->router->get('/posts/{id}', [PostController::class, 'show']);
 
 $app->run();
