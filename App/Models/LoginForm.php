@@ -6,8 +6,8 @@ use App\Core\Application;
 
 class LoginForm extends Model
 {
-    public string $email = '';
-    public string $password = '';
+    private string $email = '';
+    private string $password = '';
 
     public function rules() : array {
         return [

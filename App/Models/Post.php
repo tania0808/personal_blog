@@ -6,17 +6,17 @@ use App\Core\DbModel;
 
 class Post extends DbModel
 {
-    public int $id;
+    private int $id;
 
-    public int $user_id;
+    private int $user_id;
 
     public string $title = '';
     public string $description = '';
     public string $body = '';
 
     public string $image_name = '';
-    public string $created_at;
-    public string $updated_at;
+    private string $created_at;
+    private string $updated_at;
 
     public static function tableName(): string
     {
