@@ -22,6 +22,7 @@ abstract class BaseField
     }
 
     abstract public function renderInput(): string;
+
     public function __toString()
     {
         return sprintf('

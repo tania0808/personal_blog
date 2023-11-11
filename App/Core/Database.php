@@ -30,9 +30,6 @@ class Database
             }
             require_once Application::$ROOT_DIR.'/Migrations/'.$migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
-            echo "<pre>";
-            var_dump($className);
-            echo "</pre>";
             $instance = new $className();
             $this->log("Applying migration " . $migration);
             $instance->up();

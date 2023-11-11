@@ -28,6 +28,9 @@ abstract class Model
     {
         foreach ($this->rules() as $attribute => $rules) {
             $value = $this->{$attribute};
+            if ($value !== null) {
+                $value = trim($value);
+            }
             foreach ($rules as $rule) {
                 $ruleName = $rule;
                 if(!is_string($ruleName)) {

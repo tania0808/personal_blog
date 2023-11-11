@@ -24,6 +24,7 @@ use App\Models\User;
 				<p class="text-sm font-light text-gray-500">
 					Don’t have an account yet? <a href="/register" class="font-medium text-primary-600 hover:underline">Sign up</a>
 				</p>
+				<?php echo Form::end(); ?>
 			</div>
 		</div>
 	</div>

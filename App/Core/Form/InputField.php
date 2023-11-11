@@ -4,18 +4,20 @@ namespace App\Core\Form;
 
 use App\Models\Model;
 
-class Field extends BaseField
+class InputField extends BaseField
 {
     public const TYPE_TEXT = 'text';
     public const TYPE_PASSWORD = 'password';
     public string $type = 'text';
 
     /**
-     * @param string $type
+     * @param Model $model
+     * @param $attribute
+     * @param $label
      */
-    public function __construct(Model $model, $attribute, $label)
+    public function __construct(Model $model, $attribute, $label, $type)
     {
-        $this->type = self::TYPE_TEXT;
+        $this->type = $type;
         parent::__construct($model, $attribute, $label);
     }
 

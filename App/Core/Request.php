@@ -4,6 +4,7 @@ namespace App\Core;
 
 class Request
 {
+    public array $routeParams = [];
     public function getPath()
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
@@ -33,18 +34,24 @@ class Request
     {
         $body = [];
 
-        if($this->method() === 'get') {
+        if ($this->method() === 'get') {
             foreach ($_GET as $key => $value) {
-                $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $body[$key] = trim(filter_input(INPUT_GET, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             }
         }
 
-        if($this->method() === 'post') {
+        if ($this->method() === 'post') {
             foreach ($_POST as $key => $value) {
-                $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $body[$key] = trim(filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             }
         }
 
         return $body;
+    }
+
+    public function setRouteParams(array $params)
+    {
+        $this->routeParams = $params;
+        return $this;
     }
 }

@@ -13,6 +13,8 @@ class Post extends DbModel
     public string $title = '';
     public string $description = '';
     public string $body = '';
+
+    public string $image_name = '';
     public string $created_at;
     public string $updated_at;
 
@@ -42,11 +44,16 @@ class Post extends DbModel
 
     public function attributes(): array
     {
-        return ['user_id', 'title', 'description', 'body'];
+        return ['user_id', 'title', 'description', 'body', 'image_name'];
     }
 
     public function setUser($userId)
     {
         $this->user_id = $userId;
+    }
+
+    public function setImage($imageName)
+    {
+        $this->image_name = $imageName;
     }
 }
