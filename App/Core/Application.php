@@ -15,6 +15,7 @@ class Application
     public Session $session;
     public View $view;
     public Database $db;
+
     public ?DbModel $user;
 
     public static Application $app;

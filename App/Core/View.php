@@ -40,5 +40,4 @@ class View
         include_once Application::$ROOT_DIR."/App/Views/$view.php";
         return ob_get_clean();
     }
-
 }

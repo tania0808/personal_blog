@@ -6,12 +6,12 @@ use App\Core\Application;
 
 abstract class Model
 {
-    public const RULE_REQUIRED = 'required';
-    public const RULE_EMAIL = 'email';
-    public const RULE_MIN= 'min';
-    public const RULE_MAX= 'max';
-    public const RULE_MATCH= 'match';
-    public const RULE_UNIQUE= 'unique';
+    protected const RULE_REQUIRED = 'required';
+    protected const RULE_EMAIL = 'email';
+    protected const RULE_MIN= 'min';
+    private const RULE_MAX= 'max';
+    protected const RULE_MATCH= 'match';
+    protected const RULE_UNIQUE= 'unique';
     public function loadData($data)
     {
         foreach ($data as $key => $value) {
@@ -28,6 +28,9 @@ abstract class Model
     {
         foreach ($this->rules() as $attribute => $rules) {
             $value = $this->{$attribute};
+            if ($value !== null) {
+                $value = trim($value);
+            }
             foreach ($rules as $rule) {
                 $ruleName = $rule;
                 if(!is_string($ruleName)) {

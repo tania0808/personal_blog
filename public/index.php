@@ -2,7 +2,10 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\SiteController;
+use App\Controllers\PostController;
 use App\Core\Application;
+use App\Models\User;
+use App\Repositories\PostRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
@@ -10,14 +13,13 @@ $dotenv->safeLoad();
 
 
 $config = [
-    'userClass' => \App\Models\User::class,
+    'userClass' => User::class,
     'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],
         'password' => $_ENV['DB_PASSWORD'],
     ]
 ];
-
 $app = new Application(dirname(__DIR__), $config);
 
 $app->router->get('/', [SiteController::class, 'home']);
@@ -37,6 +39,10 @@ $app->router->get('/profile', [AuthController::class, 'profile']);
 
 
 // Post page
-$app->router->get('/posts', [AuthController::class, 'profile']);
+$app->router->get('/posts', [PostController::class, 'index']);
+$app->router->get('/post/create', [PostController::class, 'store']);
+$app->router->post('/post/create', [PostController::class, 'store']);
+$app->router->get('/posts/{id}', [PostController::class, 'show']);
+$app->router->get('/posts/edit/{id}/', [PostController::class, 'edit']);
 
 $app->run();

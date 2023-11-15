@@ -8,7 +8,7 @@ class Form
 {
     public static function begin($action, $method)
     {
-        echo sprintf('<form class="space-y-4 md:space-y-6" action="%s" method="%s">', $action, $method );
+        echo sprintf('<form class="space-y-4 md:space-y-6" action="%s" method="%s" enctype="multipart/form-data">', $action, $method );
         return new Form();
     }
 
@@ -19,7 +19,7 @@ class Form
 
     public function field(Model $model, $attribute, $type, $label)
     {
-        return new Field($model, $attribute, $type, $label);
+        return new InputField($model, $attribute, $type, $label);
     }
 
 }
