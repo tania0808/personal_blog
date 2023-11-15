@@ -4,35 +4,23 @@ namespace App\Repositories;
 
 use App\Core\Application;
 
+// @TODO: devrait être abstract et avoir un constructeur pour stocker une instance de PDO plutôt que d'avoir un prepare qui te retourne une instance d'un PDOStatement
 class Repository
 {
-    public function prepare($sql): bool|\PDOStatement
-    {
-        return Application::$app->db->pdo->prepare($sql);
-    }
-
-    public function execute($statement, $params = [])
-    {
-        $statement->execute($params);
-        return $statement;
-    }
-
-    public function fetchAll($statement)
-    {
-        return $statement->fetchAll();
-    }
+    // @TODO: return type et il faut intégrer un appel à executeQuery dedans
+    // TODO: fetchAll n'a rien à faire ici, tu peux garder tout le reste et retourner le statement en faisant un return sur execute + FETCH_OBJ
 
     protected function executeQuery($sql, $params = [])
     {
-        $statement = $this->prepare($sql);
+        $statement = Application::$app->db->pdo->prepare($sql);
 
-        if (!empty($params)) {
-            foreach ($params as $key => $value) {
-                $statement->bindValue(":$key", $value);
-            }
-        }
+        return $statement->execute($params);
+    }
+    public function fetchAll($statement)
+    {
+        $this->executeQuery($statement);
 
-        $this->execute($statement);
-        return $this->fetchAll($statement);
+        $result = $this->fetchAll(\PDO::FETCH_OBJ);
+        return $result;
     }
 }

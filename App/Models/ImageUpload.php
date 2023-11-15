@@ -4,7 +4,7 @@ namespace App\Models;
 
 class ImageUpload
 {
-    private $image_name;
+    public $image_name;
     private $image_type;
     private $image_size;
     private $image_temp;

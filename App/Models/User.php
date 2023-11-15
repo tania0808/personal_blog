@@ -7,12 +7,12 @@ use App\Core\UserModel;
 
 class User extends UserModel
 {
-    private int $id;
+    public int $id;
     public string $first_name = '';
     public string $last_name = '';
-    private string $email = '';
-    private string $password = '';
-    private string $confirmPassword = '';
+    public string $email = '';
+    public string $password = '';
+    public string $confirmPassword = '';
     private bool $is_admin;
     private string $created_at;
 
@@ -41,7 +41,6 @@ class User extends UserModel
                 self::RULE_UNIQUE, 'class' => self::class
             ]],
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8]],
-            'confirmPassword' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
         ];
     }
 

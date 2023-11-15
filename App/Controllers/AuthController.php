@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Core\Application;
 use App\Core\Controller;
+use App\Core\FormValidator\PostFormValidator;
+use App\Core\FormValidator\RegisterFormValidator;
 use App\Core\Middlewares\AuthMiddleware;
 use App\Core\Request;
 use App\Core\Response;
@@ -41,20 +43,24 @@ class AuthController extends Controller {
         $user = new User();
 
         if($request->isPost()) {
+            $registerFormValidator = new RegisterFormValidator();
             $user->loadData($request->getBody());
 
-            if($user->validate() && $user->save()) {
+            if ($registerFormValidator->validate($request) && $user->save()) {
                 Application::$app->session->setFlash('success', 'Your account was successfully created !');
                 Application::$app->response->redirect('/');
                 exit();
             }
 
             return $this->render('register', [
-                'model' => $user
+                'model' => $user,
+                'errors' => $registerFormValidator->getErrors()
             ]);
         }
+
         return $this->render('register', [
-            'model' => $user
+            'model' => $user,
+            'errors' => []
         ]);
     }
 

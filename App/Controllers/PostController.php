@@ -4,17 +4,16 @@ namespace App\Controllers;
 
 use App\Core\Application;
 use App\Core\Controller;
+use App\Core\FormValidator\PostFormValidator;
 use App\Core\Request;
 use App\Core\Response;
-use App\Models\ContactForm;
 use App\Models\ImageUpload;
 use App\Models\Post;
-use App\Models\User;
 use App\Repositories\PostRepository;
 
 class PostController extends Controller {
 
-    private PostRepository $postRepository;
+    private readonly PostRepository $postRepository;
 
     public function __construct()
     {
@@ -23,7 +22,7 @@ class PostController extends Controller {
 
     public function index()
     {
-        $posts = $this->postRepository->all();
+        $posts = $this->postRepository->getAll();
 
         return $this->render('posts', [
             'posts' => $posts
@@ -32,17 +31,18 @@ class PostController extends Controller {
 
     public function store(Request $request, Response $response)
     {
-        $post = new Post();
-        $post->setUser(Application::$app->user->getId());
+        $data = $request->getBody();
+        $data['author_id'] = Application::$app->user->getId();
+        $postFormValidator = new PostFormValidator();
 
         if ($request->isPost()) {
-            $post->loadData($request->getBody());
+
             if(!empty($_FILES['image_name']['name'])) {
                 $imageUpload = new ImageUpload($_FILES['image_name']);
-                $post->setImage($imageUpload->image_name);
+                $data['image_name'] = $imageUpload->image_name;
             }
 
-            if ($post->validate() && $post->save()) {
+            if ($postFormValidator->validate($request) && $this->postRepository->create($data)) {
                 if(!empty($_FILES['image_name']['name'])) {
                     $imageUpload->moveFile();
                 }
@@ -52,16 +52,25 @@ class PostController extends Controller {
             }
         }
 
-        return $this->render('newPost', ['model' => $post]);
+        return $this->render('newPost', ['model' => new Post(), 'errors' => $postFormValidator->getErrors()]);
     }
 
     public function show(Request $request) {
-        $post = $this->postRepository->getOne($request->routeParams['id'])[0];
+        $post = $this->postRepository->getById($request->routeParams['id']);
         return $this->render('singlePost', ['post' => $post]);
     }
 
     public function edit(Request $request) {
-        $post = $this->postRepository->getOne($request->routeParams['id'])[0];
-        return $this->render('singlePost', ['post' => $post]);
+        $post = $this->postRepository->getById($request->routeParams['id']);
+
+        if ($request->isPost()) {
+            $postFormValidator = new PostFormValidator();
+
+            if (!$postFormValidator->validate($request)) {
+                return $this->render('editPost', ['post' => $post, 'errors' => $postFormValidator->getErrors()]);
+            }
+        }
+
+        return $this->render('editPost', ['post' => $post, 'errors' => []]);
     }
 }

@@ -44,5 +44,6 @@ $app->router->get('/post/create', [PostController::class, 'store']);
 $app->router->post('/post/create', [PostController::class, 'store']);
 $app->router->get('/posts/{id}', [PostController::class, 'show']);
 $app->router->get('/posts/edit/{id}/', [PostController::class, 'edit']);
+$app->router->post('/posts/edit/{id}/', [PostController::class, 'edit']);
 
 $app->run();

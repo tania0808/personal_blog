@@ -6,17 +6,19 @@ use App\Core\DbModel;
 
 class Post extends DbModel
 {
-    private int $id;
+    public int $id;
 
-    private int $user_id;
+    public int $author_id;
 
     public string $title = '';
     public string $description = '';
     public string $body = '';
 
     public string $image_name = '';
-    private string $created_at;
-    private string $updated_at;
+    public int | null $approved_by;
+    public string | null $approved_at;
+    public string $created_at;
+    public string $updated_at;
 
     public static function tableName(): string
     {
@@ -44,12 +46,12 @@ class Post extends DbModel
 
     public function attributes(): array
     {
-        return ['user_id', 'title', 'description', 'body', 'image_name'];
+        return ['author_id', 'title', 'description', 'body', 'image_name'];
     }
 
-    public function setUser($userId)
+    public function setAuthor($author_id)
     {
-        $this->user_id = $userId;
+        $this->author_id = $author_id;
     }
 
     public function setImage($imageName)

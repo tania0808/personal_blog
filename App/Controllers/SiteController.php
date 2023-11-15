@@ -3,10 +3,13 @@
 namespace App\Controllers;
 
 use App\Core\Application;
+use App\Core\ContactForm;
 use App\Core\Controller;
+use App\Core\Exception\MailNotSentException;
+use App\Core\FormValidator\ContactFormValidator;
 use App\Core\Request;
 use App\Core\Response;
-use App\Models\ContactForm;
+use App\Core\Service\EmailSender;
 
 class SiteController extends Controller {
 
@@ -14,21 +17,28 @@ class SiteController extends Controller {
     {
         return $this->render('home');
     }
+
+    /**
+     * @throws MailNotSentException
+     */
     public function contact(Request $request, Response $response)
     {
+        $emailSender = new EmailSender();
         $contactForm = new ContactForm();
+        $contactFormValidator = new ContactFormValidator();
 
-        if($request->isPost()) {
+        if($request->isPost() && $contactFormValidator->validate($request)) {
             $contactForm->loadData($request->getBody());
-            if($contactForm->validate() && $contactForm->sendMail()) {
-                Application::$app->session->setFlash('success', 'Your email was successfully sent !');
-                Application::$app->response->redirect('/');
-                exit();
-            }
+            $emailSender->send($contactForm->email, $contactForm->name, $contactForm->subject, $contactForm->body);
+
+            Application::$app->session->setFlash('success', 'Your email was successfully sent !');
+            Application::$app->response->redirect('/');
+            exit();
         }
 
         return $this->render('contact', [
             'model' => $contactForm,
-        ] );
+            'errors' => $contactFormValidator->getErrors()
+        ]);
     }
 }
