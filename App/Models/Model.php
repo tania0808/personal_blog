@@ -21,7 +21,7 @@ abstract class Model
         }
     }
 
-    abstract public function rules(): array;
+    //abstract public function rules(): array;
 
     public array $errors = [];
     public function validate()

@@ -11,10 +11,11 @@ class m0003_create_comments_table
         $SQL = <<<SQL
             CREATE TABLE IF NOT EXISTS comments  (
                 id SERIAL PRIMARY KEY,
-                user_id int references users(id),
+                author_id int references users(id),
                 post_id int references posts(id),
                 content text NOT NULL,
-                is_approved bool default false,
+                approved_by int references users(id),
+                approved_at timestamp default null,
                 created_at timestamp default current_timestamp,
                 updated_at timestamp default current_timestamp                        
             )

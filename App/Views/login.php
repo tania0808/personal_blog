@@ -15,8 +15,8 @@ use App\Models\User;
 					Sign in to your account
 				</h1>
                 <?php $form = Form::begin('', 'post'); ?>
-                <?php echo $form->field($model, 'email', 'email', 'Email') ?>
-                <?php echo $form->field($model, 'password', 'password', 'Password') ?>
+                <?php echo $form->field($model, 'email', 'Email', 'email') ?>
+                <?php echo $form->field($model, 'password', 'Password', 'password') ?>
 				<div class="flex items-center justify-end">
 					<a href="#" class="text-sm font-medium text-primary-600 hover:underline">Forgot password?</a>
 				</div>

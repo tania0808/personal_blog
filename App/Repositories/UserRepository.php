@@ -4,8 +4,9 @@ namespace App\Repositories;
 
 use App\Core\Application;
 use App\Core\Database;
+use PDO;
 
-class PostRepository implements RepositoryInterface
+class UserRepository implements UserRepositoryInterface
 {
     private $db;
 
@@ -14,15 +15,24 @@ class PostRepository implements RepositoryInterface
         $this->db = Application::$app->db;
     }
 
+    public function getByEmail(string $email)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email=?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function getByEmailAndPassword(string $email, string $password)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email=? AND password=?");
+        $stmt->execute([$email, password_hash($password, PASSWORD_DEFAULT)]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
     public function create($data): bool
     {
-        if ($data['image_name']) {
-            $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (?, ?, ?, ?, ?)");
-            return $stmt->execute([$data['author_id'], $data['title'], $data['body'], $data['description'], $data['image_name']]);
-        } else {
-            $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description) VALUES (?, ?, ?, ?)");
-            return $stmt->execute([$data['author_id'], $data['title'], $data['body'], $data['description']]);
-        }
+        $stmt = $this->db->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
+        return $stmt->execute([$data['first_name'], $data['last_name'], $data['email'], password_hash($data['password'], PASSWORD_DEFAULT)]);
     }
 
     public function getAll(): false|array
