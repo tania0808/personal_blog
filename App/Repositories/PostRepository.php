@@ -52,9 +52,22 @@ class PostRepository implements RepositoryInterface
         return $statement->fetch(\PDO::FETCH_OBJ);
     }
 
-    public function update(int $id, array $data): void
+    public function update(int $id, array $data): bool
     {
-        // TODO: Implement update() method.
+        $attributes = isset($data['image_name']) ? ['title', 'description', 'body', 'image_name'] : ['title', 'description', 'body'];
+        $params = array_map(fn($attr) => "$attr = :$attr", $attributes);
+
+        $sql = "UPDATE posts SET " . implode(', ', $params) . " WHERE id = :id";
+
+        $statement = $this->db->prepare($sql);
+
+        foreach ($attributes as $attribute) {
+            $statement->bindValue(":$attribute", $data["$attribute"]);
+        }
+
+        $statement->bindValue(":id", $id);
+
+        return $statement->execute();
     }
 
     public function delete(int $id):void
