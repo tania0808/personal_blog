@@ -18,10 +18,8 @@ class SiteController extends Controller {
         return $this->render('home');
     }
 
-    /**
-     * @throws MailNotSentException
-     */
-    public function contact(Request $request, Response $response)
+
+    public function contact(Request $request)
     {
         $emailSender = new EmailSender();
         $contactForm = new ContactForm();

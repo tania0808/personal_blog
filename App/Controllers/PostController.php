@@ -5,9 +5,9 @@ namespace App\Controllers;
 use App\Core\Application;
 use App\Core\Controller;
 use App\Core\FormValidator\PostFormValidator;
+use App\Core\ImageUpload;
 use App\Core\Request;
 use App\Core\Response;
-use App\Models\ImageUpload;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 
@@ -24,7 +24,7 @@ class PostController extends Controller {
     {
         $posts = $this->postRepository->getAll();
 
-        return $this->render('posts', [
+        return $this->render('post/posts', [
             'posts' => $posts
         ]);
     }
@@ -52,12 +52,12 @@ class PostController extends Controller {
             }
         }
 
-        return $this->render('newPost', ['model' => new Post(), 'errors' => $postFormValidator->getErrors()]);
+        return $this->render('post/newPost', ['model' => new Post(), 'errors' => $postFormValidator->getErrors()]);
     }
 
     public function show(Request $request) {
         $post = $this->postRepository->getById($request->routeParams['id']);
-        return $this->render('singlePost', ['post' => $post]);
+        return $this->render('post/singlePost', ['post' => $post]);
     }
 
     public function edit(Request $request) {
@@ -71,6 +71,6 @@ class PostController extends Controller {
             }
         }
 
-        return $this->render('editPost', ['post' => $post, 'errors' => []]);
+        return $this->render('post/editPost', ['post' => $post, 'errors' => []]);
     }
 }

@@ -1,5 +1,8 @@
 <?php
 use \App\Core\Application;
+echo "<pre>";
+var_dump(Application::$app->session->get('user'));
+echo "</pre>";
 ?>
 <!doctype html>
 <html lang="en">

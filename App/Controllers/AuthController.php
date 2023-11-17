@@ -4,37 +4,55 @@ namespace App\Controllers;
 
 use App\Core\Application;
 use App\Core\Controller;
-use App\Core\FormValidator\PostFormValidator;
+use App\Core\FormValidator\LoginFormValidator;
 use App\Core\FormValidator\RegisterFormValidator;
 use App\Core\Middlewares\AuthMiddleware;
 use App\Core\Request;
 use App\Core\Response;
-use App\Models\LoginForm;
 use App\Models\User;
+use App\Repositories\UserRepository;
 
 class AuthController extends Controller {
 
+    private readonly UserRepository $userRepository;
 
     public function __construct()
     {
         $this->registerMiddleware(new AuthMiddleware(['profile']));
+        $this->userRepository = new UserRepository();
     }
 
     public function login(Request $request, Response $response)
     {
-        $loginForm = new LoginForm();
-        if($request->isPost()) {
-            $loginForm->loadData($request->getBody());
+        $fieldsToExclude = ['password','is_admin', 'created_at'];
+        $loginFormValidator = new LoginFormValidator();
+        $user = new User();
+        $authError = '';
 
-            if($loginForm->validate() && $loginForm->login()) {
-                $response->redirect('/');
-                $loginForm->login();
-                return;
+        if($request->isPost()) {
+            if($loginFormValidator->validate($request)) {
+                $user->loadData($request->getBody());
+                $foundUser = $this->userRepository->getByEmail($user->email);
+
+                if (!$foundUser || !password_verify($user->password, $foundUser->password)) {
+                    $authError = 'This combination of e-mail and password is incorrect';
+                } else {
+                    foreach ($fieldsToExclude as $field) {
+                        unset($foundUser->$field);
+                    }
+                    $user->loadData($foundUser);
+                    Application::$app->session->setFlash('success', 'Your have successfully logged in !');
+                    $response->redirect('/');
+                    return Application::$app->login($user);
+                }
             }
         }
+
         $this->setLayout('auth');
-        return $this->render('login', [
-            'model' => $loginForm
+        return $this->render('auth/login', [
+            'model' => $user,
+            'errors' => $loginFormValidator->getErrors(),
+            'authError' => $authError
         ]);
     }
     public function register(Request $request)
@@ -46,7 +64,7 @@ class AuthController extends Controller {
             $registerFormValidator = new RegisterFormValidator();
             $user->loadData($request->getBody());
 
-            if ($registerFormValidator->validate($request) && $user->save()) {
+            if ($registerFormValidator->validate($request) && $this->userRepository->create($request->getBody())) {
                 Application::$app->session->setFlash('success', 'Your account was successfully created !');
                 Application::$app->response->redirect('/');
                 exit();
@@ -58,7 +76,7 @@ class AuthController extends Controller {
             ]);
         }
 
-        return $this->render('register', [
+        return $this->render('auth/register', [
             'model' => $user,
             'errors' => []
         ]);
@@ -72,6 +90,6 @@ class AuthController extends Controller {
 
     public function profile()
     {
-        return $this->render('profile');
+        return $this->render('admin/profile');
     }
 }

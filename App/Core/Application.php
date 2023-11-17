@@ -16,7 +16,7 @@ class Application
     public View $view;
     public Database $db;
 
-    public ?DbModel $user;
+    public ?User $user;
 
     public static Application $app;
     public ?Controller $controller = null;
@@ -70,12 +70,10 @@ class Application
         $this->controller = $controller;
     }
 
-    public function login (DbModel $user)
+    public function login (User $user)
     {
         $this->user = $user;
-        $primaryKey = $user->primaryKey();
-        $primaryKeyValue = $user->{$primaryKey};
-        $this->session->set('user', $primaryKeyValue);
+        $this->session->set('user', $user->id);
         return true;
     }
 

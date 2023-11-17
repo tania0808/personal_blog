@@ -12,7 +12,6 @@ class User extends UserModel
     public string $last_name = '';
     public string $email = '';
     public string $password = '';
-    public string $confirmPassword = '';
     private bool $is_admin;
     private string $created_at;
 
