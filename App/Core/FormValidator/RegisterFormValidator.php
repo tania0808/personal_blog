@@ -3,7 +3,6 @@
 namespace App\Core\FormValidator;
 
 use App\Core\FormValidator\Rules\EmailRule;
-use App\Core\FormValidator\Rules\MatchRule;
 use App\Core\FormValidator\Rules\MinRule;
 use App\Core\FormValidator\Rules\RequiredRule;
 use App\Core\FormValidator\Rules\UniqueRule;

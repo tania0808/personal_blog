@@ -12,10 +12,10 @@ $this->title = 'Edit a post';
     body {background:white !important;}
 </style>
 <div class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
-	<form class="space-y-4 md:space-y-6" method="POST" enctype="multipart/form-data">
+	<form class="space-y-4 md:space-y-6" method="post" enctype="multipart/form-data">
 		<div>
 			<label class="block mb-2 text-sm font-medium text-gray-900">Title</label>
-			<input type="text" name="title" value="<?php echo $post['title'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+			<input type="text" name="title" value="<?php echo $post->title ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
             <?php if(isset($errors['title'])) : ?>
 	            <p class="mt-2 text-sm text-red-600 dark:text-red-500">
                     <?php foreach ($errors['title'] as $error) : ?>
@@ -26,17 +26,25 @@ $this->title = 'Edit a post';
 		</div>
 		<div>
 			<label class="block mb-2 text-sm font-medium text-gray-900">Description</label>
-			<input type="text" name="description" value="<?php echo $post['description'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+			<input type="text" name="description" value="<?php echo $post->description ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
             <?php if(isset($errors['description'])) : ?>
-				<p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Error</span></p>
+				<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                    <?php foreach ($errors['description'] as $error) : ?>
+						<span class="font-medium"><?php echo $error; ?></span><br>
+                    <?php endforeach; ?>
+				</p>
             <?php endif; ?>
 		</div>
 
 		<div>
 			<label class="block mb-2 text-sm font-medium text-gray-900">Body</label>
-			<textarea name="body" rows="10" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring %s"><?php echo $post['body'] ?></textarea>
+			<textarea name="body" rows="10" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring %s"><?php echo $post->body ?></textarea>
             <?php if(isset($errors['body'])) : ?>
-				<p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Error</span></p>
+				<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                    <?php foreach ($errors['body'] as $error) : ?>
+						<span class="font-medium"><?php echo $error; ?></span><br>
+                    <?php endforeach; ?>
+				</p>
             <?php endif; ?>
 		</div>
 
@@ -48,10 +56,14 @@ $this->title = 'Edit a post';
 				<div class="flex text-sm text-gray-600 justify-center">
 					<label for="file-upload" class="text-center relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
 						<span class="flex">Upload a file</span>
-						<input type="file" name="image_name" value="<?php echo $post['image_name'] ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
-	                    <?php if(isset($errors['image_name'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Error</span></p>
-	                    <?php endif; ?>
+						<input type="file" name="image_name" value="<?php echo $post->image_name ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                        <?php if(isset($errors['image_name'])) : ?>
+							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                                <?php foreach ($errors['image_name'] as $error) : ?>
+									<span class="font-medium"><?php echo $error; ?></span><br>
+                                <?php endforeach; ?>
+							</p>
+                        <?php endif; ?>
 					</label>
 				</div>
 				<p class="text-xs">

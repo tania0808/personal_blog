@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Core;
 
 class ImageUpload
 {
@@ -8,7 +8,7 @@ class ImageUpload
     private $image_type;
     private $image_size;
     private $image_temp;
-    private $uploads_folder = __DIR__ . '/../../public/images/';
+    public $uploads_folder = __DIR__ . '/../../public/images/';
     private $upload_max_size = 2*24*1024;
     private $allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
@@ -17,8 +17,6 @@ class ImageUpload
     /**
      * @param $image
      */
-
-    // Class methods
 
     public function __construct($image){
         $this->image_name = time() . '_' . trim(basename($image['name']));

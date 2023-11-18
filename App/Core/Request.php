@@ -44,6 +44,9 @@ class Request
             foreach ($_POST as $key => $value) {
                 $body[$key] = trim(filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS));
             }
+            foreach ($_FILES as $key => $file) {
+                $body[$key] = $file['name'];
+            }
         }
 
         return $body;

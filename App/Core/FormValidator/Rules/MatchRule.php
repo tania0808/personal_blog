@@ -8,9 +8,6 @@ class MatchRule extends AbstractRule
 
     public function check(mixed $value): bool
     {
-        echo "<pre>";
-        var_dump($this->{$this->constraints['match']});
-        echo "</pre>";die();
         return $value !== $this->{$this->constraints['match']};
     }
 

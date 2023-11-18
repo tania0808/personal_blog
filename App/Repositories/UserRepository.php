@@ -22,13 +22,6 @@ class UserRepository implements UserRepositoryInterface
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function getByEmailAndPassword(string $email, string $password)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email=? AND password=?");
-        $stmt->execute([$email, password_hash($password, PASSWORD_DEFAULT)]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
-    }
-
     public function create($data): bool
     {
         $stmt = $this->db->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
