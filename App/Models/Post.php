@@ -15,10 +15,10 @@ class Post extends DbModel
     public string $body = '';
 
     public string $image_name = '';
-    public int | null $approved_by;
-    public string | null $approved_at;
-    public string $created_at;
-    public string $updated_at;
+    private int | null $approved_by;
+    private string | null $approved_at;
+    private string $created_at;
+    private string $updated_at;
 
     public static function tableName(): string
     {
