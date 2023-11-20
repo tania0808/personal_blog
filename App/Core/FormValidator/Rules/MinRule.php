@@ -8,7 +8,7 @@ class MinRule extends AbstractRule
 
     public function check(mixed $value): bool
     {
-        return strlen($value) >= $this->constraints['minLength'];
+        return mb_strlen($value) >= $this->constraints['minLength'];
     }
 
     public function getErrorMessage(): string

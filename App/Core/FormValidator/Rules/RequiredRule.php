@@ -8,7 +8,7 @@ class RequiredRule extends AbstractRule
 
     public function check(mixed $value): bool
     {
-        return !empty($value);
+        return isset($value) && $value !== '';
     }
 
     public function getErrorMessage(): string

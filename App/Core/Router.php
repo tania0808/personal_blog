@@ -40,16 +40,18 @@ class Router
     {
         $method = $this->request->method();
         $url = $this->request->getPath();
+
         // Trim slashes
         $url = trim($url, '/');
 
         // Get all routes for current request method
         $routes = $this->getRouteMap($method);
 
-        // Start iterating registed routes
+        // Start iterating registered routes
         foreach ($routes as $route => $callback) {
             // Trim slashes
             $route = trim($route, '/');
+
             $routeNames = [];
 
             if (!$route) {
@@ -57,12 +59,12 @@ class Router
             }
 
             // Find all route names from route and save in $routeNames
-            if (preg_match_all('/\{(\w+)(:[^}]+)?}/', $route, $matches)) {
+            if (preg_match_all('/\{(\w+)?}/', $route, $matches)) {
                 $routeNames = $matches[1];
             }
 
             // Convert route name into regex pattern
-            $routeRegex = "@^" . preg_replace_callback('/\{\w+(:([^}]+))?}/', fn($m) => isset($m[2]) ? "({$m[2]})" : '(\w+)', $route) . "$@";
+            $routeRegex = "@^" . preg_replace_callback('/\{\w+?}/', fn($m) => isset($m[2]) ? "({$m[2]})" : '(\w+)', $route) . "$@";
 
             // Test and match current route against $routeRegex
             if (preg_match_all($routeRegex, $url, $valueMatches)) {
@@ -71,7 +73,6 @@ class Router
                     $values[] = $valueMatches[$i][0];
                 }
                 $routeParams = array_combine($routeNames, $values);
-
                 $this->request->setRouteParams($routeParams);
                 return $callback;
             }
@@ -110,19 +111,4 @@ class Router
         }
         return call_user_func($callback, $this->request, $this->response);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

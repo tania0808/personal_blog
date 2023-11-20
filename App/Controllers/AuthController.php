@@ -29,22 +29,21 @@ class AuthController extends Controller {
         $user = new User();
         $authError = '';
 
-        if($request->isPost()) {
-            if($loginFormValidator->validate($request)) {
-                $user->loadData($request->getBody());
-                $foundUser = $this->userRepository->getByEmail($user->email);
+        if($request->isPost() && $loginFormValidator->validate($request)) {
+            $user->loadData($request->getBody());
+            $foundUser = $this->userRepository->getByEmail($user->email);
 
-                if (!$foundUser || !password_verify($user->password, $foundUser->password)) {
-                    $authError = 'This combination of e-mail and password is incorrect';
-                } else {
-                    foreach ($fieldsToExclude as $field) {
-                        unset($foundUser->$field);
-                    }
-                    $user->loadData($foundUser);
-                    Application::$app->session->setFlash('success', 'Your have successfully logged in !');
-                    $response->redirect('/');
-                    return Application::$app->login($user);
+            if (!$foundUser || !password_verify($user->password, $foundUser->password)) {
+                $authError = 'This combination of e-mail and password is incorrect';
+            } else {
+                foreach ($fieldsToExclude as $field) {
+                    unset($foundUser->$field);
                 }
+
+                $user->loadData($foundUser);
+                Application::$app->session->setFlash('success', 'Your have successfully logged in !');
+                $response->redirect('/');
+                return Application::$app->login($user);
             }
         }
 
@@ -55,22 +54,22 @@ class AuthController extends Controller {
             'authError' => $authError
         ]);
     }
-    public function register(Request $request)
+    public function register(Request $request, Response $response)
     {
         $this->setLayout('auth');
+        $registerFormValidator = new RegisterFormValidator();
         $user = new User();
 
         if($request->isPost()) {
-            $registerFormValidator = new RegisterFormValidator();
             $user->loadData($request->getBody());
 
-            if ($registerFormValidator->validate($request) && $this->userRepository->create($request->getBody())) {
+            if ($registerFormValidator->validate($request) && $this->userRepository->create($user)) {
                 Application::$app->session->setFlash('success', 'Your account was successfully created !');
-                Application::$app->response->redirect('/');
+                $response->redirect('/');
                 exit();
             }
 
-            return $this->render('register', [
+            return $this->render('auth/register', [
                 'model' => $user,
                 'errors' => $registerFormValidator->getErrors()
             ]);

@@ -1,9 +1,8 @@
-<?php $this->title = 'Contact';
+<?php use App\Core\ContactForm;
 
-use App\Core\Form\Form;
-use App\Models\User;
+$this->title = 'Contact';
 
-/** @var $model User */
+/** @var $model ContactForm */
 ?>
 <section class="bg-gray-50">
 	<div class="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">

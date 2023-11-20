@@ -8,7 +8,7 @@ class MaxRule extends AbstractRule
 
     public function check(mixed $value): bool
     {
-        return strlen($value) <= $this->constraints['maxLength'];
+        return mb_strlen($value) <= $this->constraints['maxLength'];
     }
 
     public function getErrorMessage(): string

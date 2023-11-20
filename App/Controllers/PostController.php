@@ -34,77 +34,83 @@ class PostController extends Controller {
 
     public function store(Request $request, Response $response)
     {
-        $data = $request->getBody();
-        $post = new Post();
-        $post->loadData($data);
-        $data['author_id'] = Application::$app->user->getId();
+        $post = $this->loadPostDataFromRequest($request);
         $postFormValidator = new PostFormValidator();
-
+        $errors = $postFormValidator->getErrors();
         if ($request->isPost()) {
-
-            if(!empty($_FILES['image_name']['name'])) {
-                $imageUpload = new ImageUpload($_FILES['image_name']);
-                $data['image_name'] = $imageUpload->image_name;
-            }
-
-            if ($postFormValidator->validate($request) && $this->postRepository->create($data)) {
-                if(!empty($_FILES['image_name']['name'])) {
-                    $imageUpload->moveFile();
-                }
-                Application::$app->session->setFlash('success', 'Your post was successfully created!');
-                Application::$app->response->redirect('/');
-                exit();
+            $imageUpload = $this->handleImageUpload($post, $errors);
+            if ($postFormValidator->validate($request) && empty($errors['image_name']) && $this->postRepository->create($post)) {
+                $imageUpload->moveFile();
+                $this->handleSuccessRedirect($response, "/posts");
             }
         }
-        return $this->render('post/newPost', ['post' => $post, 'errors' => $postFormValidator->getErrors()]);
+        return $this->render('post/newPost', ['post' => $post, 'errors' => $errors]);
     }
 
-    public function show(Request $request) {
+    public function show(Request $request, Response $response) {
         $post = $this->postRepository->getById($request->routeParams['id']);
 
         return $this->render('post/singlePost', ['post' => $post]);
     }
 
-    public function edit(Request $request) {
-        $post = $this->postRepository->getById($request->routeParams['id']);
-
-        $this->guardAgainstNotAuthorizedUser($post);
+    public function edit(Request $request, Response $response) {
+        $existingPost = $this->postRepository->getById($request->routeParams['id']);
+        $this->guardAgainstNotAuthorizedUser($existingPost);
 
         if ($request->isPost()) {
-            return $this->processEditForm($request, $post);
+            $postFormValidator = new PostFormValidator();
+            $errors = $postFormValidator->getErrors();
+            $newPost = $this->loadPostDataFromRequest($request);
+            $imageUpload = $this->handleImageUpload($newPost, $errors);
+
+            if ($postFormValidator->validate($request) && empty($errors['image_name']) && $this->postRepository->update($existingPost->getId(), $newPost)) {
+                $imageUpload->moveFile();
+                $this->handleImageDelete($imageUpload, $existingPost);
+                $this->handleSuccessRedirect($response, "/posts/{$existingPost->getId()}", 'Your post was successfully edited!');
+            }
+
+            return $this->render("post/editPost", ['post' => $newPost, 'errors' => $errors]);
         }
 
-        return $this->render('post/editPost', ['post' => $post, 'errors' => []]);
+        return $this->render('post/editPost', ['post' => $existingPost, 'errors' => []]);
+    }
+
+    public function loadPostDataFromRequest(Request $request): Post
+    {
+        $post = new Post();
+        $post->loadData($request->getBody());
+        $post->setAuthorId(Application::$app->user->getId());
+        return $post;
+    }
+
+    public function handleImageUpload(Post $post, array &$errors): ?ImageUpload
+    {
+        if(!empty($_FILES['image_name']['name'])) {
+            $imageUpload = new ImageUpload($_FILES['image_name']);
+            $errors['image_name'] = $imageUpload->getErrors();
+            $post->setImageName($imageUpload->image_name);
+            return $imageUpload;
+        }
+        return null;
+    }
+
+    public function handleImageDelete(?ImageUpload $imageUpload, Post $existingPost): void
+    {
+        if ($imageUpload && !empty($existingPost->getImageName())) {
+            unlink($imageUpload->uploads_folder . $existingPost->getImageName());
+        }
     }
 
     private function processEditForm(Request $request, $post)
     {
-        $newPost = new Post();
-        $requestPostFields = $request->getBody();
-        $newPost->loadData($request->getBody());
-        $postFormValidator = new PostFormValidator();
 
-        if(!empty($_FILES['image_name']['name'])) {
-            $requestPostFields['image_name'] =  $this->uploadNewImage($requestPostFields,$post);
-        }
-
-        if ($postFormValidator->validate($request) && $this->postRepository->update($post->id, $requestPostFields)) {
-            Application::$app->response->redirect("/posts/$post->id");
-        }
-        return $this->render("post/editPost", ['post' => $newPost, 'errors' => $postFormValidator->getErrors()]);
     }
 
-    private function uploadNewImage($request,$post)
+    private function handleSuccessRedirect(Response $response, ?string $location = '/', ?string $message = 'Your post was successfully created!'): void
     {
-        $imageUpload = new ImageUpload($_FILES['image_name']);
-        $request['image_name'] = $imageUpload->image_name;
-        $imageUpload->moveFile();
-
-        if(!empty($post->image_name)) {
-            unlink($imageUpload->uploads_folder . $post->image_name);
-        }
-
-        return $imageUpload->image_name;
+        Application::$app->session->setFlash('success', $message);
+        $response->redirect($location);
+        exit();
     }
 
     private function guardAgainstNotAuthorizedUser($post): void

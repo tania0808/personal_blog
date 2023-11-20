@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Core\Application;
 use App\Core\Database;
+use App\Models\Post;
 
 class PostRepository implements RepositoryInterface
 {
@@ -14,15 +15,10 @@ class PostRepository implements RepositoryInterface
         $this->db = Application::$app->db;
     }
 
-    public function create($data): bool
+    public function create(Post $post): bool
     {
-        if ($data['image_name']) {
-            $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (?, ?, ?, ?, ?)");
-            return $stmt->execute([$data['author_id'], $data['title'], $data['body'], $data['description'], $data['image_name']]);
-        } else {
-            $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description) VALUES (?, ?, ?, ?)");
-            return $stmt->execute([$data['author_id'], $data['title'], $data['body'], $data['description']]);
-        }
+        $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (:author_id, :title, :body, :description, :image_name)");
+        return $stmt->execute(['author_id' => $post->author_id, 'title' => $post->title, 'body' => $post->body, 'description' => $post->description, 'image_name' => $post->image_name]);
     }
 
     public function getAll(): false|array
@@ -49,25 +45,28 @@ class PostRepository implements RepositoryInterface
         SQL;
         $statement = $this->db->prepare($sql);
         $statement->execute([$id]);
-        return $statement->fetch(\PDO::FETCH_OBJ);
+        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+        return $statement->fetch();
     }
 
-    public function update(int $id, array $data): bool
+    public function update($id, Post $post): bool
     {
-        $attributes = isset($data['image_name']) ? ['title', 'description', 'body', 'image_name'] : ['title', 'description', 'body'];
-        $params = array_map(fn($attr) => "$attr = :$attr", $attributes);
+        $attributes = ['title', 'description', 'body', 'image_name'];
 
-        $sql = "UPDATE posts SET " . implode(', ', $params) . " WHERE id = :id";
+        $setParams = array_map(fn($attr) => "$attr = :$attr", $attributes);
+        $setClause = implode(', ', $setParams);
+
+        $sql = "UPDATE posts SET $setClause WHERE id = :id";
+
+        $data = [];
+        foreach ($attributes as $attribute) {
+            $data[":$attribute"] = $post->$attribute;
+        }
+        $data[':id'] = $id;
 
         $statement = $this->db->prepare($sql);
 
-        foreach ($attributes as $attribute) {
-            $statement->bindValue(":$attribute", $data["$attribute"]);
-        }
-
-        $statement->bindValue(":id", $id);
-
-        return $statement->execute();
+        return $statement->execute($data);
     }
 
     public function delete(int $id):void
