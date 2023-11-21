@@ -13,8 +13,8 @@ final class RegisterFormValidator extends AbstractFormValidator
     public function rules(): array
     {
         return [
-            'first_name' => [new RequiredRule()],
-            'last_name' => [new RequiredRule()],
+            'firstName' => [new RequiredRule()],
+            'lastName' => [new RequiredRule()],
             'email' => [new RequiredRule(), new EmailRule(), new UniqueRule(['class' => User::class, 'fieldName' => 'email'])],
             'password' => [new RequiredRule(), new MinRule(['minLength' => 8])],
         ];

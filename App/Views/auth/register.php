@@ -1,7 +1,10 @@
 <?php
+
+use App\Models\User;
+
 $this->title = 'Register';
 
-/** @var $model \App\Models\User */
+/** @var $user User */
 /** @var $errors */
 
 ob_start();
@@ -17,9 +20,9 @@ ob_start();
 				<form class="space-y-4 md:space-y-6" action="" method="post">
 					<div>
 						<label class="block mb-2 text-sm font-medium text-gray-900">First Name</label>
-						<input type="text" name="first_name" value="<?php echo $model->first_name ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="firstName" value="<?php echo $user->getFirstName() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
                         <?php if(isset($errors['first_name'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['first_name'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
@@ -28,9 +31,9 @@ ob_start();
 					</div>
 					<div>
 						<label for="last_name" class="block mb-2 text-sm font-medium text-gray-900">Last Name</label>
-						<input type="text" name="last_name" value="<?php echo $model->last_name ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="lastName" value="<?php echo $user->getLastName() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
                         <?php if(isset($errors['last_name'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['last_name'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
@@ -39,9 +42,9 @@ ob_start();
 					</div>
 					<div>
 						<label class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-						<input type="text" name="email" value="<?php echo $model->email ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="email" value="<?php echo $user->getEmail() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
                         <?php if(isset($errors['email'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['email'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
@@ -50,9 +53,9 @@ ob_start();
 					</div>
 					<div>
 						<label class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-						<input type="password" name="password" value="<?php echo $model->password ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="password" name="password" value="<?php echo $user->getPassword() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
                         <?php if(isset($errors['password'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['password'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>

@@ -1,8 +1,10 @@
 <?php use App\Core\Application;
 use App\Models\Post;
+use App\Models\User;
 
 $this->title = 'Post';
 /** @var $post Post */
+/** @var $author User */
 
 $currentUser = Application::$app->session->get('user');
 ?>
@@ -10,10 +12,10 @@ $currentUser = Application::$app->session->get('user');
 <section class="text-gray-700 body-font overflow-hidden bg-white">
 	<div class="container px-5 pt-24 pb-6 mx-auto">
 		<div class="lg:w-4/5 mx-auto flex flex-wrap">
-			<img alt="ecommerce" class="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200" src="<?php echo $post->image_name ? '/public/images/' . $post->image_name : 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png' ?>">
+			<img alt="ecommerce" class="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200" src="<?php echo $post->getImageName() ? '/public/images/' . $post->getImageName() : 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png' ?>">
 			<div class="lg:w-1/2 w-full lg:pl-10 mt-6 lg:mt-0">
 				<div class="flex justify-between">
-					<h2 class="text-sm title-font text-gray-500 tracking-widest"><?php echo $post->getFirstName() . ' ' . $post->getLastName() ; ?></h2>
+					<h2 class="text-sm title-font text-gray-500 tracking-widest"><?php echo $author->getFullName(); ?></h2>
 					<!-- Dropdown menu start -->
 					<?php if ($post->getAuthorId() === $currentUser): ?>
 					<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="btn" type="button">
@@ -23,7 +25,7 @@ $currentUser = Application::$app->session->get('user');
 					</button>
 
 					<div id="dropdown" class="ms-6 z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-						<ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+						<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
 							<li>
 								<a href="/posts/edit/<?php echo $post->getId(); ?>" class="block px-4 py-2 hover:bg-gray-100">Edit</a>
 							</li>
@@ -46,6 +48,6 @@ $currentUser = Application::$app->session->get('user');
 		</div>
 	</div>
 	<div class="container px-5 lg:w-4/5 pt-6 mx-auto">
-		<span class="title-font font-medium text-2xl text-gray-700"><?php echo $post->body; ?></span>
+		<span class="title-font font-medium text-2xl text-gray-700"><?php echo $post->getBody(); ?></span>
 	</div>
 </section>

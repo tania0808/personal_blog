@@ -31,9 +31,9 @@ class AuthController extends Controller {
 
         if($request->isPost() && $loginFormValidator->validate($request)) {
             $user->loadData($request->getBody());
-            $foundUser = $this->userRepository->getByEmail($user->email);
+            $foundUser = $this->userRepository->getByEmail($user->getEmail());
 
-            if (!$foundUser || !password_verify($user->password, $foundUser->password)) {
+            if (!$foundUser || !password_verify($user->getPassword(), $foundUser->password)) {
                 $authError = 'This combination of e-mail and password is incorrect';
             } else {
                 foreach ($fieldsToExclude as $field) {
@@ -49,7 +49,7 @@ class AuthController extends Controller {
 
         $this->setLayout('auth');
         return $this->render('auth/login', [
-            'model' => $user,
+            'user' => $user,
             'errors' => $loginFormValidator->getErrors(),
             'authError' => $authError
         ]);
@@ -70,13 +70,13 @@ class AuthController extends Controller {
             }
 
             return $this->render('auth/register', [
-                'model' => $user,
+                'user' => $user,
                 'errors' => $registerFormValidator->getErrors()
             ]);
         }
 
         return $this->render('auth/register', [
-            'model' => $user,
+            'user' => $user,
             'errors' => []
         ]);
     }

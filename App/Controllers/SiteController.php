@@ -22,12 +22,12 @@ class SiteController extends Controller {
     public function contact(Request $request)
     {
         $emailSender = new EmailSender();
-        $contactForm = new ContactForm();
+        $contactFormValues = new ContactForm();
         $contactFormValidator = new ContactFormValidator();
 
         if($request->isPost() && $contactFormValidator->validate($request)) {
-            $contactForm->loadData($request->getBody());
-            $emailSender->send($contactForm->email, $contactForm->name, $contactForm->subject, $contactForm->body);
+            $contactFormValues->loadData($request->getBody());
+            $emailSender->send($contactFormValues->getEmail(), $contactFormValues->getName(), $contactFormValues->getSubject(), $contactFormValues->getBody());
 
             Application::$app->session->setFlash('success', 'Your email was successfully sent !');
             Application::$app->response->redirect('/');
@@ -35,7 +35,7 @@ class SiteController extends Controller {
         }
 
         return $this->render('contact', [
-            'model' => $contactForm,
+            'model' => $contactFormValues,
             'errors' => $contactFormValidator->getErrors()
         ]);
     }

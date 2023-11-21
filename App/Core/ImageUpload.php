@@ -53,6 +53,7 @@ class ImageUpload
     private function isImage()
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
         $mime = finfo_file($finfo, $this->image_temp);
         if(!in_array($mime, $this->allowed_image_types)){
             $this->setError('Only [ .jpeg, .jpg, .png, .webp and .gif ] files are allowed');

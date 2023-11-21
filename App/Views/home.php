@@ -12,13 +12,13 @@
 				<svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
 				<a href="/public/assets/portfolio.pdf" download>CV</a>
 			</button>
-			<a href="https://github.com/tania0808" class="hover:text-blue-900 transition ease-linear hover:scale-125">
+			<a href="https://github.com/tania0808" target="_blank" class="hover:text-blue-900 transition ease-linear hover:scale-125">
 				<i class="fab fa-github"></i>
 			</a>
-			<a href="https://www.linkedin.com/in/tetiana-his/" class="hover:text-blue-900 transition ease-linear hover:scale-125">
+			<a href="https://www.linkedin.com/in/tetiana-his/" target="_blank" class="hover:text-blue-900 transition ease-linear hover:scale-125">
 				<i class="fab fa-linkedin"></i>
 			</a>
-			<a href="mailto:tania08082000@gmail.com" class="hover:text-blue-900 transition ease-linear hover:scale-125">
+			<a href="mailto:tania08082000@gmail.com" target="_blank" class="hover:text-blue-900 transition ease-linear hover:scale-125">
 				<i class="fas fa-envelope"></i>
 			</a>
 		</div>

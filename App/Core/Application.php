@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Models\User;
+use App\Repositories\UserRepository;
 
 class Application
 {
@@ -37,8 +38,7 @@ class Application
         $primaryKeyValue = $this->session->get('user');
 
         if ($primaryKeyValue) {
-            $primaryKey = $this->userClass::primaryKey();
-            $this->user = $this->userClass::findOne([$primaryKey => $primaryKeyValue]);
+            $this->user = (new UserRepository())->getById($primaryKeyValue);
         } else {
             $this->user = null;
         }
@@ -73,7 +73,7 @@ class Application
     public function login (User $user)
     {
         $this->user = $user;
-        $this->session->set('user', $user->id);
+        $this->session->set('user', $user->getId());
         return true;
     }
 

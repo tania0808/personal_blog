@@ -4,17 +4,12 @@ namespace App\Models;
 
 use App\Core\Model;
 
-class Post extends Model
+class Comment extends Model
 {
     private int $id;
-
     private int $author_id;
-
-    private string $title = '';
-    private string $description = '';
-    private string $body = '';
-
-    private string | null $image_name = null;
+    private string $post_id;
+    private string $content = '';
     private int | null $approved_by;
     private string | null $approved_at;
     private string $created_at;
@@ -40,44 +35,24 @@ class Post extends Model
         $this->author_id = $author_id;
     }
 
-    public function getTitle(): string
+    public function getPostId(): string
     {
-        return $this->title;
+        return $this->post_id;
     }
 
-    public function setTitle(string $title): void
+    public function setPostId(string $post_id): void
     {
-        $this->title = $title;
+        $this->post_id = $post_id;
     }
 
-    public function getDescription(): string
+    public function getContent(): string
     {
-        return $this->description;
+        return $this->content;
     }
 
-    public function setDescription(string $description): void
+    public function setContent(string $content): void
     {
-        $this->description = $description;
-    }
-
-    public function getBody(): string
-    {
-        return $this->body;
-    }
-
-    public function setBody(string $body): void
-    {
-        $this->body = $body;
-    }
-
-    public function getImageName(): string | null
-    {
-        return $this->image_name;
-    }
-
-    public function setImageName(string $image_name): void
-    {
-        $this->image_name = $image_name;
+        $this->content = $content;
     }
 
     public function getApprovedBy(): ?int

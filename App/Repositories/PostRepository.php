@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Core\Application;
 use App\Core\Database;
 use App\Models\Post;
+use App\Models\User;
 
 class PostRepository implements RepositoryInterface
 {
@@ -23,24 +24,22 @@ class PostRepository implements RepositoryInterface
 
     public function getAll(): false|array
     {
-
+        // TODO add "WHERE approved_by IS NOT NULL" after implementing admin page
         $sql = <<<SQL
-            SELECT posts.*, users.first_name, users.last_name
-            FROM posts
-            INNER JOIN users ON posts.author_id = users.id;
+            SELECT * FROM posts
         SQL;
         $statement = $this->db->prepare($sql);
         $statement->execute();
-        return $statement->fetchAll(\PDO::FETCH_OBJ);
+        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+
+        return $statement->fetchAll();
     }
 
     public function getById($id)
     {
 
         $sql = <<<SQL
-            SELECT posts.*, users.first_name, users.last_name
-            FROM posts
-            INNER JOIN users ON posts.author_id = users.id
+            SELECT * FROM posts
             WHERE posts.id = :postId;
         SQL;
         $statement = $this->db->prepare($sql);

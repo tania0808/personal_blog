@@ -8,13 +8,13 @@ $this->title = 'Contact';
 	<div class="flex flex-col items-center px-6 py-8 mx-auto md:h-screen lg:py-0">
 		<div class="w-full mt-10 bg-white rounded-lg shadow sm:max-w-md xl:p-0">
 			<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-				<h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">Contact Me</h2>
+				<h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900">Contact Me</h2>
 				<form class="space-y-4 md:space-y-6" action="" method="post">
 					<div>
 						<label class="block mb-2 text-sm font-medium text-gray-900" for="subject">Subject</label>
-						<input type="text" name="subject" value="<?php echo $model->subject ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="subject" value="<?php echo $model->getSubject() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
                         <?php if(isset($errors['subject'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['subject'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
@@ -23,9 +23,9 @@ $this->title = 'Contact';
 					</div>
 					<div>
 						<label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
-						<input type="text" name="name" value="<?php echo $model->name ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="name" value="<?php echo $model->getName() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
                         <?php if(isset($errors['name'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['name'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
@@ -34,9 +34,9 @@ $this->title = 'Contact';
 					</div>
 					<div>
 						<label class="block mb-2 text-sm font-medium text-gray-900" for="email">Email</label>
-						<input type="text" name="email" value="<?php echo $model->email ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="email" value="<?php echo $model->getEmail() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
                         <?php if(isset($errors['email'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['email'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
@@ -45,9 +45,9 @@ $this->title = 'Contact';
 					</div>
 					<div>
 						<label class="block mb-2 text-sm font-medium text-gray-900">Body</label>
-						<input type="text" name="body" value="<?php echo $model->body ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+						<input type="text" name="body" value="<?php echo $model->getBody() ?>" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
                         <?php if(isset($errors['body'])) : ?>
-							<p class="mt-2 text-sm text-red-600 dark:text-red-500">
+							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['body'] as $error) : ?>
 									<span class="font-medium"><?php echo $error; ?></span><br>
                                 <?php endforeach; ?>
