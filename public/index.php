@@ -45,5 +45,10 @@ $app->router->post('/post/create', [PostController::class, 'store']);
 $app->router->get('/posts/{id}', [PostController::class, 'show']);
 $app->router->get('/posts/edit/{id}/', [PostController::class, 'edit']);
 $app->router->post('/posts/edit/{id}/', [PostController::class, 'edit']);
+$app->router->get('/posts/delete/{id}/', [PostController::class, 'delete']);
+
+// Comment
+$app->router->post('/posts/{id}', [PostController::class, 'addComment']);
+$app->router->get('/posts/{postId}/comments/delete/{id}', [PostController::class, 'deleteComment']);
 
 $app->run();

@@ -19,7 +19,7 @@ class PostRepository implements RepositoryInterface
     public function create(Post $post): bool
     {
         $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (:author_id, :title, :body, :description, :image_name)");
-        return $stmt->execute(['author_id' => $post->author_id, 'title' => $post->title, 'body' => $post->body, 'description' => $post->description, 'image_name' => $post->image_name]);
+        return $stmt->execute(['author_id' => $post->getAuthorId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'description' => $post->getDescription(), 'image_name' => $post->getImageName()]);
     }
 
     public function getAll(): false|array
@@ -68,8 +68,15 @@ class PostRepository implements RepositoryInterface
         return $statement->execute($data);
     }
 
-    public function delete(int $id):void
+    public function delete(int $id): bool
     {
-        // TODO: Implement delete() method.
+        $sql = <<<SQL
+            DELETE FROM posts
+            WHERE posts.id = :postId;
+        SQL;
+
+        $statement = $this->db->prepare($sql);
+        return $statement->execute([$id]);
     }
+
 }

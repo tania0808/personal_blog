@@ -34,6 +34,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function getByIds(array $ids)
     {
+        if(count($ids) < 1) {
+            return false;
+        }
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $stmt = $this->db->prepare("SELECT * FROM users WHERE id IN($placeholders)");
 

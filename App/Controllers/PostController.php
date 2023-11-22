@@ -4,26 +4,52 @@ namespace App\Controllers;
 
 use App\Core\Application;
 use App\Core\Controller;
+use App\Core\FormValidator\CommentFormValidator;
 use App\Core\FormValidator\PostFormValidator;
 use App\Core\ImageUpload;
 use App\Core\Middlewares\AuthMiddleware;
 use App\Core\Request;
 use App\Core\Response;
+use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
+use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
 
 class PostController extends Controller {
     private readonly PostRepository $postRepository;
     private readonly UserRepository $userRepository;
+    private readonly CommentRepository $commentRepository;
 
     public function __construct()
     {
         $this->registerMiddleware(new AuthMiddleware(['edit']));
         $this->postRepository = new PostRepository();
         $this->userRepository = new UserRepository();
+        $this->commentRepository = new CommentRepository();
     }
 
+    public function addComment(Request $request, Response $response)
+    {
+        $comment = new Comment();
+        $commentFormValidator = new CommentFormValidator();
+
+        $post = $this->postRepository->getById($request->routeParams['id']);
+        $author = $this->userRepository->getById($post->getAuthorId());
+
+        $comment->loadData($request->getBody());
+        $comment->setPostId($request->routeParams['id']);
+        $comment->setAuthorId(Application::$app->user->getId());
+
+        $isValidForm = $commentFormValidator->validate($request);
+        $errors = $commentFormValidator->getErrors();
+
+        if ($isValidForm && $this->commentRepository->create($comment)) {
+            $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['id']}", 'Your comment has been successfully submitted for validation');
+        }
+        return $this->render("post/singlePost", ['post' => $post, 'author' => $author, 'errors' => $errors, 'comment' => $comment]);
+    }
 
     public function index()
     {
@@ -47,10 +73,24 @@ class PostController extends Controller {
     public function show(Request $request, Response $response) {
         $post = $this->postRepository->getById($request->routeParams['id']);
         $author = $this->userRepository->getById($post->getAuthorId());
+        $comments = $this->commentRepository->getAllByPostId($post->getId());
+
+        $authorIds = array_values(
+            array_unique(
+                array_map(
+                    fn (Comment $comment) => $comment->getAuthorId(),
+                    $comments
+                )
+            )
+        );
+
+        $commentAuthors = $this->userRepository->getByIds($authorIds);
 
         return $this->render('post/singlePost', [
             'post' => $post,
-            'author' => $author
+            'author' => $author,
+            'comments' => $comments,
+            'commentAuthors' => $commentAuthors,
         ]);
     }
 
@@ -98,6 +138,17 @@ class PostController extends Controller {
         return $this->render('post/editPost', ['post' => $existingPost, 'errors' => []]);
     }
 
+    public function delete(Request $request, Response $response)
+    {
+        if($this->postRepository->delete($request->routeParams['id'])) {
+            $this->handleSuccessRedirect($response, '/posts', 'Your post was successfully deleted!');
+        }
+
+        Application::$app->session->setFlash('error', "An error occured !");
+        Application::$app->response->redirect("/posts");
+        exit();
+    }
+
     public function loadPostDataFromRequest(Request $request): Post
     {
         $post = new Post();
@@ -134,6 +185,7 @@ class PostController extends Controller {
             $imageUpload->moveFile();
         }
     }
+
     private function handleSuccessRedirect(Response $response, ?string $location = '/', ?string $message = 'Your post was successfully created!'): void
     {
         Application::$app->session->setFlash('success', $message);
@@ -149,6 +201,17 @@ class PostController extends Controller {
 
         Application::$app->session->setFlash('error', "You don't have the access to this page !");
         Application::$app->response->redirect("/posts/$post->id");
+        exit();
+    }
+
+    public function deleteComment(Request $request, Response $response)
+    {
+        if($this->commentRepository->delete($request->routeParams['id'])) {
+            $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['postId']}", 'Your comment was successfully deleted!');
+        }
+
+        Application::$app->session->setFlash('error', "An error occured !");
+        Application::$app->response->redirect("/posts");
         exit();
     }
 }

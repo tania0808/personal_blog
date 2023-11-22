@@ -8,7 +8,7 @@ class Comment extends Model
 {
     private int $id;
     private int $author_id;
-    private string $post_id;
+    private int $post_id;
     private string $content = '';
     private int | null $approved_by;
     private string | null $approved_at;
