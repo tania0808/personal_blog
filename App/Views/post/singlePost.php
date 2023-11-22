@@ -58,8 +58,8 @@ $currentUser = Application::$app->session->get('user');
 
 <!-- COMMENTS SECTION -->
 
-<section class="container bg-white py-8 lg:py-16">
-	<div class="mx-auto px-5 md:px-24">
+<section class="container px-5 pt-24 pb-6 mx-auto">
+	<div class="lg:w-4/5 mx-auto flex flex-col">
 		<div class="flex justify-between items-center mb-6">
 			<h2 class="text-lg lg:text-2xl font-bold text-gray-900">Discussion (<?php echo count($comments)?>)</h2>
 		</div>

@@ -10,7 +10,7 @@ final class CommentFormValidator extends AbstractFormValidator
     public function rules(): array
     {
         return [
-            'content' => [new RequiredRule(), new MinRule(['minLength' => 8])],
+            'content' => [new RequiredRule(), new MinRule(['minLength' => 3])],
         ];
     }
 }

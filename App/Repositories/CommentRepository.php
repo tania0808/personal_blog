@@ -29,7 +29,8 @@ class CommentRepository implements CommentRepositoryInterface
         // TODO add "WHERE approved_by IS NOT NULL" after implementing admin page
         $sql = <<<SQL
             SELECT * FROM comments
-            WHERE comments.post_id = :postId;
+            WHERE comments.post_id = :postId
+            ORDER BY created_at DESC;
         SQL;
         $statement = $this->db->prepare($sql);
         $statement->execute([$postId]);
