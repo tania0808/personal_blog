@@ -101,17 +101,17 @@ class PostController extends Controller {
         $errors = [];
 
         if ($request->isPost()) {
-            $imageUpload = $this->handleImageUpload($post, $errors);
             $isValidForm = $postFormValidator->validate($request);
             $errors = $postFormValidator->getErrors();
+            $imageUpload = $this->handleImageUpload($post, $errors);
 
             if ($isValidForm && empty($errors['image_name']) && $this->postRepository->create($post)) {
                 $this->handleImageMove($post, $imageUpload);
                 $this->handleSuccessRedirect($response, "/posts");
             }
+            return $this->render('post/newPost', ['post' => $post, 'errors' => $errors]);
         }
 
-        return $this->render('post/newPost', ['post' => $post, 'errors' => $errors]);
     }
 
     public function edit(Request $request, Response $response) {

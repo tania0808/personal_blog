@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\AdminController;
 use App\Controllers\AuthController;
 use App\Controllers\SiteController;
 use App\Controllers\PostController;
@@ -50,5 +51,8 @@ $app->router->get('/posts/delete/{id}/', [PostController::class, 'delete']);
 // Comment
 $app->router->post('/posts/{id}', [PostController::class, 'addComment']);
 $app->router->get('/posts/{postId}/comments/delete/{id}', [PostController::class, 'deleteComment']);
+
+// Admin
+$app->router->get('/admin/posts', [AdminController::class, 'index']);
 
 $app->run();

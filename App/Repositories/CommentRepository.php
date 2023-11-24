@@ -5,9 +5,6 @@ namespace App\Repositories;
 use App\Core\Application;
 use App\Core\Database;
 use App\Models\Comment;
-use App\Models\Post;
-use App\Models\User;
-use PDO;
 
 class CommentRepository implements CommentRepositoryInterface
 {

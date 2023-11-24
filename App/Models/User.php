@@ -6,7 +6,7 @@ use App\Core\Model;
 
 class User extends Model
 {
-    private int | null $id = null;
+    private int $id;
     private string $first_name = '';
     private string $last_name = '';
     private string $email = '';
