@@ -7,19 +7,12 @@ use App\Core\Database;
 use App\Models\Post;
 use App\Models\User;
 
-class PostRepository implements RepositoryInterface
+class PostRepository extends Repository implements RepositoryInterface
 {
-    private $db;
-
-    public function __construct()
-    {
-        $this->db = Application::$app->db;
-    }
-
     public function create(Post $post): bool
     {
         $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (:author_id, :title, :body, :description, :image_name)");
-        return $stmt->execute(['author_id' => $post->getAuthorId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'description' => $post->getDescription(), 'image_name' => $post->getImageName()]);
+        return $stmt->execute(['author_id' => $post->getAuthorId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'description' => $post->getDescription(), 'image_name' => $post->getImage_name()]);
     }
 
     public function getAll(): false|array
@@ -52,15 +45,34 @@ class PostRepository implements RepositoryInterface
     {
         $attributes = ['title', 'description', 'body', 'image_name'];
 
-        $setParams = array_map(fn($attr) => "$attr = :$attr", $attributes);
-        $setClause = implode(', ', $setParams);
+        $setParams = array_map(
+            function ($attr) use ($post) {
+                $getterMethod = 'get' . ucfirst($attr);
+                $value = $post->{$getterMethod}();
 
+                // Conditionally include image_name in the SET clause
+                if ($attr !== 'image_name' || $value !== null) {
+                    return "$attr = :$attr";
+                }
+
+                return null;
+            },
+            $attributes
+        );
+
+        // Remove null values from the setParams array
+        $setParams = array_filter($setParams);
+
+        $setClause = implode(', ', $setParams);
         $sql = "UPDATE posts SET $setClause WHERE id = :id";
 
         $data = [];
+
         foreach ($attributes as $attribute) {
-            $data[":$attribute"] = $post->$attribute;
+            $getterMethod = 'get' . ucfirst($attribute);
+            $data[":$attribute"] = $post->{$getterMethod}();
         }
+
         $data[':id'] = $id;
 
         $statement = $this->db->prepare($sql);

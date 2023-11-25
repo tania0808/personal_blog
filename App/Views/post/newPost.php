@@ -57,7 +57,7 @@ $this->title = 'New post';
 				</p>
 				<div class="flex pt-4 text-sm text-gray-600 justify-center">
 					<label for="file-upload" class="text-center relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-						<input type="file" name="imageName" value="<?php echo $post->getImageName() ?>"  class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+						<input type="file" name="imageName" value="<?php echo $post->getImage_name() ?>"  class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         <?php if(isset($errors['image_name'])) : ?>
 							<p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['image_name'] as $error) : ?>

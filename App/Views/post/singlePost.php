@@ -16,7 +16,7 @@ $currentUser = Application::$app->session->get('user');
 <section class="text-gray-700 body-font overflow-hidden bg-white">
 	<div class="container px-5 pt-24 pb-6 mx-auto">
 		<div class="lg:w-4/5 mx-auto flex flex-wrap">
-			<img alt="ecommerce" class="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200" src="<?php echo $post->getImageName() ? '/public/images/' . $post->getImageName() : 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png' ?>">
+			<img alt="ecommerce" class="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200" src="<?php echo $post->getImage_name() ? '/public/images/' . $post->getImage_name() : 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png' ?>">
 			<div class="lg:w-1/2 w-full lg:pl-10 mt-6 lg:mt-0">
 				<div class="flex justify-between">
 					<h2 class="text-sm title-font text-gray-500 tracking-widest"><?php echo $author->getFullName(); ?></h2>

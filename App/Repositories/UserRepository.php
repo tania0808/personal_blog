@@ -7,15 +7,8 @@ use App\Core\Database;
 use App\Models\User;
 use PDO;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends Repository implements UserRepositoryInterface
 {
-    private Database $db;
-
-    public function __construct()
-    {
-        $this->db = Application::$app->db;
-    }
-
     public function getByEmail(string $email)
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email=:email");

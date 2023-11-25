@@ -12,7 +12,7 @@ class m0003_create_comments_table
             CREATE TABLE IF NOT EXISTS comments  (
                 id SERIAL PRIMARY KEY,
                 author_id int references users(id),
-                post_id int references posts(id),
+                post_id int references posts(id) ON DELETE CASCADE,
                 content text NOT NULL,
                 approved_by int references users(id),
                 approved_at timestamp default null,

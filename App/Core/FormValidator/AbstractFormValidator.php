@@ -3,7 +3,6 @@
 namespace App\Core\FormValidator;
 
 use App\Core\FormValidator\Rules\AbstractRule;
-use App\Core\FormValidator\Rules\Rule;
 use App\Core\Request;
 
 abstract class AbstractFormValidator

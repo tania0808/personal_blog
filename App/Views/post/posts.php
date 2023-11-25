@@ -16,7 +16,7 @@ $this->title = 'All posts';
 	<div class="transition-all duration-150 flex w-full px-4 py-6 md:w-1/2 lg:w-1/3">
 		<div class="flex flex-col w-full items-stretch min-h-full pb-4 mb-6 transition-all duration-150 bg-white rounded-lg shadow-lg hover:shadow-2xl">
 			<div class="md:flex-shrink-0">
-				<img src="<?php echo $post->getImageName() ? '/public/images/' . $post->getImageName() : 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png' ?>" alt="Blog Cover" class="object-cover w-full rounded-lg rounded-b-none md:h-56"/>
+				<img src="<?php echo $post->getImage_name() ? '/public/images/' . $post->getImage_name() : 'https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder-1024x512.png' ?>" alt="Blog Cover" class="object-cover w-full rounded-lg rounded-b-none md:h-56"/>
 			</div>
 			<div class="flex flex-wrap items-center flex-1 px-4 py-1 text-center mx-auto">
 				<a href="/posts/<?php echo $post->getId(); ?>" class="hover:underline">

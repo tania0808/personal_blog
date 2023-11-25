@@ -3,19 +3,14 @@
 namespace App\Repositories;
 
 use App\Core\Application;
+use App\Core\Database;
+
 class Repository
 {
-    protected function executeQuery($sql, $params = [])
-    {
-        $statement = Application::$app->db->pdo->prepare($sql);
+    protected readonly Database $db;
 
-        return $statement->execute($params);
-    }
-    public function fetchAll($statement)
+    public function __construct()
     {
-        $this->executeQuery($statement);
-
-        $result = $this->fetchAll(\PDO::FETCH_OBJ);
-        return $result;
+        $this->db = Application::$app->db;
     }
 }

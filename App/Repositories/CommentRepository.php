@@ -6,15 +6,8 @@ use App\Core\Application;
 use App\Core\Database;
 use App\Models\Comment;
 
-class CommentRepository implements CommentRepositoryInterface
+class CommentRepository extends Repository implements CommentRepositoryInterface
 {
-    private Database $db;
-
-    public function __construct()
-    {
-        $this->db = Application::$app->db;
-    }
-
     public function create(Comment $comment): bool
     {
         $stmt = $this->db->prepare("INSERT INTO comments (author_id, post_id, content) VALUES (:author_id, :post_id, :content)");

@@ -70,7 +70,7 @@ class Post extends Model
         $this->body = $body;
     }
 
-    public function getImageName(): string | null
+    public function getImage_name(): string | null
     {
         return $this->image_name;
     }

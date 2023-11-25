@@ -12,10 +12,10 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Models\Comment;
 use App\Models\Post;
-use App\Models\User;
 use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
+use JetBrains\PhpStorm\NoReturn;
 
 class PostController extends Controller {
     private readonly PostRepository $postRepository;
@@ -32,11 +32,9 @@ class PostController extends Controller {
 
     public function addComment(Request $request, Response $response)
     {
+        $postData = $this->getPostData($request);
         $comment = new Comment();
         $commentFormValidator = new CommentFormValidator();
-
-        $post = $this->postRepository->getById($request->routeParams['id']);
-        $author = $this->userRepository->getById($post->getAuthorId());
 
         $comment->loadData($request->getBody());
         $comment->setPostId($request->routeParams['id']);
@@ -48,7 +46,25 @@ class PostController extends Controller {
         if ($isValidForm && $this->commentRepository->create($comment)) {
             $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['id']}", 'Your comment has been successfully submitted for validation');
         }
-        return $this->render("post/singlePost", ['post' => $post, 'author' => $author, 'errors' => $errors, 'comment' => $comment]);
+        return $this->render("post/singlePost", [
+            'errors' => $errors,
+            'comment' => $comment,
+            'post' => $postData['post'],
+            'author' => $postData['author'],
+            'comments' => $postData['comments'],
+            'commentAuthors' => $postData['commentAuthors'],
+        ]);
+    }
+
+    #[NoReturn] public function deleteComment(Request $request, Response $response): void
+    {
+        if($this->commentRepository->delete($request->routeParams['id'])) {
+            $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['postId']}", 'Your comment was successfully deleted!');
+        }
+
+        Application::$app->session->setFlash('error', "An error occured !");
+        Application::$app->response->redirect("/posts");
+        exit();
     }
 
     public function index()
@@ -71,6 +87,18 @@ class PostController extends Controller {
     }
 
     public function show(Request $request, Response $response) {
+        $postData = $this->getPostData($request);
+
+        return $this->render('post/singlePost', [
+            'post' => $postData['post'],
+            'author' => $postData['author'],
+            'comments' => $postData['comments'],
+            'commentAuthors' => $postData['commentAuthors'],
+        ]);
+    }
+
+    public function getPostData(Request $request)
+    {
         $post = $this->postRepository->getById($request->routeParams['id']);
         $author = $this->userRepository->getById($post->getAuthorId());
         $comments = $this->commentRepository->getAllByPostId($post->getId());
@@ -86,12 +114,12 @@ class PostController extends Controller {
 
         $commentAuthors = $this->userRepository->getByIds($authorIds);
 
-        return $this->render('post/singlePost', [
+        return [
             'post' => $post,
             'author' => $author,
             'comments' => $comments,
             'commentAuthors' => $commentAuthors,
-        ]);
+        ];
     }
 
     public function store(Request $request, Response $response)
@@ -111,7 +139,7 @@ class PostController extends Controller {
             }
             return $this->render('post/newPost', ['post' => $post, 'errors' => $errors]);
         }
-
+        return $this->render('post/newPost', ['post' => $post, 'errors' => []]);
     }
 
     public function edit(Request $request, Response $response) {
@@ -121,13 +149,16 @@ class PostController extends Controller {
         if ($request->isPost()) {
             $postFormValidator = new PostFormValidator();
             $newPost = $this->loadPostDataFromRequest($request);
+
             $isValidForm = $postFormValidator->validate($request);
             $errors = $postFormValidator->getErrors();
             $imageUpload = $this->handleImageUpload($newPost, $errors, $existingPost);
 
             if ($isValidForm && empty($errors['image_name']) && $this->postRepository->update($existingPost->getId(), $newPost)) {
-                $this->handleImageMove($newPost, $imageUpload);
-                $this->handleImageDelete($existingPost);
+                if(!empty($_FILES['imageName']['name'])) {
+                    $this->handleImageMove($newPost, $imageUpload);
+                    $this->handleImageDelete($existingPost);
+                }
                 $this->handleSuccessRedirect($response, "/posts/{$existingPost->getId()}", 'Your post was successfully edited!');
             }
 
@@ -138,9 +169,11 @@ class PostController extends Controller {
         return $this->render('post/editPost', ['post' => $existingPost, 'errors' => []]);
     }
 
-    public function delete(Request $request, Response $response)
+    #[NoReturn] public function delete(Request $request, Response $response)
     {
+        $existingPost = $this->postRepository->getById($request->routeParams['id']);
         if($this->postRepository->delete($request->routeParams['id'])) {
+            $this->handleImageDelete($existingPost);
             $this->handleSuccessRedirect($response, '/posts', 'Your post was successfully deleted!');
         }
 
@@ -153,20 +186,20 @@ class PostController extends Controller {
     {
         $post = new Post();
         $post->loadData($request->getBody());
-
         $post->setAuthorId(Application::$app->user->getId());
+
         return $post;
     }
 
-    public function handleImageUpload(Post $post, array &$errors, ?Post $existingPost = null): ?ImageUpload
+    public function handleImageUpload(Post $post, array &$errors, ?Post $existingPost = null)
     {
-        if(!empty($post->getImageName())) {
+        if(!empty($_FILES['imageName']['name'])) {
             $imageUpload = new ImageUpload($_FILES['imageName']);
             $errors['image_name'] = $imageUpload->getErrors();
-            !empty($_FILES['imageName']['name']) ? $post->setImageName($imageUpload->image_name) : $post->setImageName($existingPost->getImageName());
-
+            $post->setImageName($imageUpload->image_name);
             return $imageUpload;
         }
+        $post->setImageName($existingPost->getImage_name());
         return null;
     }
 
@@ -174,44 +207,33 @@ class PostController extends Controller {
     {
         $uploads_folder = __DIR__.'/../../public/images/';
 
-        if (!empty($existingPost->getImageName()) && !empty($_FILES['imageName']['name'])) {
-            unlink($uploads_folder . $existingPost->getImageName());
+        if (!empty($existingPost->getImage_name())) {
+            unlink($uploads_folder . $existingPost->getImage_name());
         }
     }
 
     private function handleImageMove(Post $post, ?ImageUpload $imageUpload = null): void
     {
-        if($post->getImageName() !== null && $imageUpload !== null) {
+        if($post->getImage_name() !== null && $imageUpload !== null) {
             $imageUpload->moveFile();
         }
     }
 
-    private function handleSuccessRedirect(Response $response, ?string $location = '/', ?string $message = 'Your post was successfully created!'): void
+    #[NoReturn] private function handleSuccessRedirect(Response $response, ?string $location = '/', ?string $message = 'Your post was successfully created!'): void
     {
         Application::$app->session->setFlash('success', $message);
         $response->redirect($location);
         exit();
     }
 
-    private function guardAgainstNotAuthorizedUser($post): void
+    private function guardAgainstNotAuthorizedUser(Post $post): void
     {
-        if(Application::$app->session->get('user') === $post->author_id) {
+        if(Application::$app->session->get('user') === $post->getAuthorId()) {
             return;
         }
 
         Application::$app->session->setFlash('error', "You don't have the access to this page !");
-        Application::$app->response->redirect("/posts/$post->id");
-        exit();
-    }
-
-    public function deleteComment(Request $request, Response $response)
-    {
-        if($this->commentRepository->delete($request->routeParams['id'])) {
-            $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['postId']}", 'Your comment was successfully deleted!');
-        }
-
-        Application::$app->session->setFlash('error', "An error occured !");
-        Application::$app->response->redirect("/posts");
+        Application::$app->response->redirect("/posts/{$post->getId()}");
         exit();
     }
 }
