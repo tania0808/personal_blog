@@ -69,7 +69,7 @@ class User extends Model
         $this->password = $password;
     }
 
-    public function isIsAdmin(): bool
+    public function getIs_admin(): bool
     {
         return $this->is_admin;
     }
@@ -79,12 +79,12 @@ class User extends Model
         $this->is_admin = $is_admin;
     }
 
-    public function getCreatedAt(): string
+    public function getCreated_at(): string
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(string $created_at): void
+    public function setCreated_at(string $created_at): void
     {
         $this->created_at = $created_at;
     }

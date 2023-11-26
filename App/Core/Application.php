@@ -35,7 +35,13 @@ class Application
 
         $this->db = new Database($config['db']);
 
-        $primaryKeyValue = $this->session->get('user');
+        $userSession = $this->session->get('user');
+
+        if (is_array($userSession) && isset($userSession['id'])) {
+            $primaryKeyValue = $userSession['id'];
+        } else {
+            $primaryKeyValue = null; // or some default value
+        }
 
         if ($primaryKeyValue) {
             $this->user = (new UserRepository())->getById($primaryKeyValue);
@@ -47,6 +53,10 @@ class Application
     public static function isGuest()
     {
         return !self::$app->user;
+    }
+    public static function isAdmin()
+    {
+        return self::$app->user->getIs_admin();
     }
 
     public function run()
@@ -73,7 +83,7 @@ class Application
     public function login (User $user)
     {
         $this->user = $user;
-        $this->session->set('user', $user->getId());
+        $this->session->set('user', ['id' => $user->getId(), 'is_admin' => $user->getIs_admin()]);
         return true;
     }
 

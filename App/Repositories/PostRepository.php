@@ -2,25 +2,23 @@
 
 namespace App\Repositories;
 
-use App\Core\Application;
-use App\Core\Database;
 use App\Models\Post;
-use App\Models\User;
 
-class PostRepository extends Repository implements RepositoryInterface
+class PostRepository extends Repository
 {
     public function create(Post $post): bool
     {
         $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (:author_id, :title, :body, :description, :image_name)");
+
         return $stmt->execute(['author_id' => $post->getAuthorId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'description' => $post->getDescription(), 'image_name' => $post->getImage_name()]);
     }
 
     public function getAll(): false|array
     {
-        // TODO add "WHERE approved_by IS NOT NULL" after implementing admin page
         $sql = <<<SQL
             SELECT * FROM posts
         SQL;
+
         $statement = $this->db->prepare($sql);
         $statement->execute();
         $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
@@ -28,16 +26,31 @@ class PostRepository extends Repository implements RepositoryInterface
         return $statement->fetchAll();
     }
 
-    public function getById($id)
+    public function getAllApproved(): false|array
     {
+        $sql = <<<SQL
+            SELECT * FROM posts
+            WHERE approved_at IS NOT NULL 
+        SQL;
 
+        $statement = $this->db->prepare($sql);
+        $statement->execute();
+        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+
+        return $statement->fetchAll();
+    }
+
+    public function getById(int $postId)
+    {
         $sql = <<<SQL
             SELECT * FROM posts
             WHERE posts.id = :postId;
         SQL;
+
         $statement = $this->db->prepare($sql);
-        $statement->execute([$id]);
+        $statement->execute([$postId]);
         $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+
         return $statement->fetch();
     }
 
@@ -78,40 +91,5 @@ class PostRepository extends Repository implements RepositoryInterface
         $statement = $this->db->prepare($sql);
 
         return $statement->execute($data);
-    }
-
-    public function delete(int $id): bool
-    {
-        $sql = <<<SQL
-            DELETE FROM posts
-            WHERE posts.id = :postId;
-        SQL;
-
-        $statement = $this->db->prepare($sql);
-        return $statement->execute([$id]);
-    }
-
-    public function approve(int $postId, int $authorId): bool
-    {
-        $sql = <<<SQL
-            UPDATE posts
-            SET approved_at = now(), approved_by = :author_id
-            WHERE posts.id = :postId;
-        SQL;
-
-        $statement = $this->db->prepare($sql);
-        return $statement->execute(['postId' => $postId, 'author_id' => $authorId]);
-    }
-
-    public function disapprove(int $postId, int $authorId): bool
-    {
-        $sql = <<<SQL
-            UPDATE posts
-            SET approved_at = null, approved_by = :author_id
-            WHERE posts.id = :postId;
-        SQL;
-
-        $statement = $this->db->prepare($sql);
-        return $statement->execute(['postId' => $postId, 'author_id' => $authorId]);
     }
 }

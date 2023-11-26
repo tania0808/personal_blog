@@ -50,14 +50,13 @@ use \App\Core\Application;
 						</svg></button>
 					<!-- Dropdown menu -->
 					<div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+						<?php if(Application::isAdmin()): ?>
 						<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
 							<li>
 								<a href="/admin/posts" class="block px-4 py-2 hover:bg-gray-100">Admin</a>
 							</li>
-							<li>
-								<a href="/profile" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
-							</li>
 						</ul>
+						<?php endif; ?>
 						<div class="py-1">
 							<a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
 						</div>

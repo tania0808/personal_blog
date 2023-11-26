@@ -2,12 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Core\Application;
-use App\Core\Database;
 use App\Models\User;
 use PDO;
 
-class UserRepository extends Repository implements UserRepositoryInterface
+class UserRepository extends Repository
 {
     public function getByEmail(string $email)
     {

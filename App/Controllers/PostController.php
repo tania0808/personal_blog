@@ -56,15 +56,10 @@ class PostController extends Controller {
         ]);
     }
 
-    #[NoReturn] public function deleteComment(Request $request, Response $response): void
+    public function deleteComment(Request $request, Response $response): void
     {
-        if($this->commentRepository->delete($request->routeParams['id'])) {
-            $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['postId']}", 'Your comment was successfully deleted!');
-        }
-
-        Application::$app->session->setFlash('error', "An error occured !");
-        Application::$app->response->redirect("/posts");
-        exit();
+        $success = $this->commentRepository->delete('comments', $request->routeParams['id']);
+        $this->redirect($response, $success, "/posts/{$request->routeParams['postId']}", 'Your comment was successfully deleted!', '/posts');
     }
 
     public function index()
@@ -144,7 +139,7 @@ class PostController extends Controller {
 
     public function edit(Request $request, Response $response) {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
-        $this->guardAgainstNotAuthorizedUser($existingPost);
+        $this->guardAgainstNotAuthorizedUser($response, $existingPost);
 
         if ($request->isPost()) {
             $postFormValidator = new PostFormValidator();
@@ -172,14 +167,14 @@ class PostController extends Controller {
     #[NoReturn] public function delete(Request $request, Response $response)
     {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
-        if($this->postRepository->delete($request->routeParams['id'])) {
+        $this->guardAgainstNotAuthorizedUser($response, $existingPost);
+
+        if($this->postRepository->delete('posts',$request->routeParams['id'])) {
             $this->handleImageDelete($existingPost);
             $this->handleSuccessRedirect($response, '/posts', 'Your post was successfully deleted!');
         }
 
-        Application::$app->session->setFlash('error', "An error occured !");
-        Application::$app->response->redirect("/posts");
-        exit();
+        $this->handleErrorRedirect($response, "/posts");
     }
 
     public function loadPostDataFromRequest(Request $request): Post
@@ -199,7 +194,9 @@ class PostController extends Controller {
             $post->setImageName($imageUpload->image_name);
             return $imageUpload;
         }
-        $post->setImageName($existingPost->getImage_name());
+        if($existingPost !== null) {
+            $post->setImageName($existingPost->getImage_name());
+        }
         return null;
     }
 
@@ -219,15 +216,13 @@ class PostController extends Controller {
         }
     }
 
-    private function guardAgainstNotAuthorizedUser(Post $post): void
+    private function guardAgainstNotAuthorizedUser(Response $response, Post $post): void
     {
-        if(Application::$app->session->get('user') === $post->getAuthorId()) {
+        if(Application::$app->session->get('user')['id'] === $post->getAuthorId() || Application::$app->session->get('user')['is_admin'] ) {
             return;
         }
 
-        Application::$app->session->setFlash('error', "You don't have the access to this page !");
-        Application::$app->response->redirect("/posts/{$post->getId()}");
-        exit();
+        $this->handleErrorRedirect($response,"/posts/{$post->getId()}", "You don't have the access to this page !");
     }
 
 

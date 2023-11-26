@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Core\Middlewares\BaseMiddleware;
+use App\Models\Post;
 use JetBrains\PhpStorm\NoReturn;
 
 class Controller
@@ -37,5 +38,28 @@ class Controller
         $response->redirect($location);
         exit();
     }
+    protected function handleErrorRedirect(Response $response, ?string $location = '/', ?string $message = "An error occured !"): void
+    {
+        Application::$app->session->setFlash('error', $message);
+        $response->redirect($location);
+        exit();
+    }
 
+    protected function redirect(Response $response, $success, $successRedirection, $successMessage, $errorRedirection)
+    {
+        if($success) {
+            $this->handleSuccessRedirect($response, $successRedirection, $successMessage);
+        } else {
+            $this->handleErrorRedirect($response, $errorRedirection);
+        }
+    }
+
+    protected function guardAgainstNotAdminUser(Response $response): void
+    {
+        if(Application::isAdmin()) {
+            return;
+        }
+
+        $this->handleErrorRedirect($response,"/", "You don't have the access to this page !");
+    }
 }

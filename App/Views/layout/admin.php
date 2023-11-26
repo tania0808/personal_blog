@@ -12,7 +12,6 @@
 </head>
 <body>
 
-
 <?php if (Application::$app->session->getFlash('success')) :  ?>
 	<div id="alert-border-1" class="flex items-center p-4 mb-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50" role="alert">
 		<svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -68,31 +67,24 @@
         <ul class="space-y-2 font-medium">
             <li>
                 <a href="/" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span class="ms-3">Dashboard</span>
+	                <i class="fa-solid fa-house"></i>
+                    <span class="ms-3">Home</span>
                 </a>
             </li>
-            <li>
-                <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+	        <li>
+                <a href="/admin/posts" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                     <i class="fa-regular fa-newspaper"></i>
                     <span class="ms-3">Posts</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <a href="/admin/comments" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                     <i class="fa-regular fa-comment"></i>
                     <span class="ms-3">Comments</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg group">
-                    <i class="fa-regular fa-envelope"></i>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark">3</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                <a href="/admin/users" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                     <i class="fa-solid fa-users"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
                 </a>

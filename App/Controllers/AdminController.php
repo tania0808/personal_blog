@@ -11,6 +11,7 @@ use App\Core\Middlewares\AuthMiddleware;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Service\EmailSender;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
@@ -28,8 +29,10 @@ class AdminController extends Controller {
         $this->userRepository = new UserRepository();
         $this->commentRepository = new CommentRepository();
     }
-    public function index()
+
+    public function index(Request $request, Response $response)
     {
+        $this->guardAgainstNotAdminUser($response);
         $this->setLayout('admin');
         $posts = $this->postRepository->getAll();
         $authorIds = array_values(
@@ -44,36 +47,62 @@ class AdminController extends Controller {
         return $this->render('admin/posts', ['posts' => $posts, 'authors' => $authors]);
     }
 
-    public function delete(Request $request, Response $response)
+    public function deletePost(Request $request, Response $response)
     {
-        if($this->postRepository->delete($request->routeParams['id'])) {
-            $this->handleSuccessRedirect($response, '/admin/posts', 'The post was successfully deleted!');
-        }
-
-        Application::$app->session->setFlash('error', "An error occured !");
-        Application::$app->response->redirect("/admin/posts");
-        exit();
+        $this->guardAgainstNotAdminUser($response);
+        $success = $this->postRepository->delete('posts', $request->routeParams['id']);
+        $this->redirect($response, $success, '/admin/posts', 'The post was successfully deleted!', '/admin/posts');
     }
 
-    public function approve(Request $request, Response $response)
+    public function approvePost(Request $request, Response $response)
     {
-        if($this->postRepository->approve($request->routeParams['id'], Application::$app->user->getId())) {
-            $this->handleSuccessRedirect($response, '/admin/posts', 'The post was approved!');
-        }
-
-        Application::$app->session->setFlash('error', "An error occured !");
-        Application::$app->response->redirect("/admin/posts");
-        exit();
+        $this->guardAgainstNotAdminUser($response);
+        $success = $this->postRepository->updateApprovalStatus('posts', $request->routeParams['id'], Application::$app->user->getId(), true);
+        $this->redirect($response, $success, '/admin/posts', 'The post was approved!', '/admin/posts');
     }
 
-    public function disapprove(Request $request, Response $response)
+    public function disapprovePost(Request $request, Response $response)
     {
-        if($this->postRepository->disapprove($request->routeParams['id'], Application::$app->user->getId())) {
-            $this->handleSuccessRedirect($response, '/admin/posts', 'The post was disapproved!');
-        }
-
-        Application::$app->session->setFlash('error', "An error occured !");
-        Application::$app->response->redirect("/admin/posts");
-        exit();
+        $this->guardAgainstNotAdminUser($response);
+        $success = $this->postRepository->updateApprovalStatus('posts', $request->routeParams['id'], Application::$app->user->getId(), false);
+        $this->redirect($response, $success, '/admin/posts', 'The post was disapproved!', '/admin/posts');
     }
+    public function approveComment(Request $request, Response $response)
+    {
+        $this->guardAgainstNotAdminUser($response);
+        $success = $this->postRepository->updateApprovalStatus('comments', $request->routeParams['id'], Application::$app->user->getId(), true);
+        $this->redirect($response, $success, '/admin/comments', 'The comment was approved!', '/admin/comments');
+    }
+
+    public function disapproveComment(Request $request, Response $response)
+    {
+        $this->guardAgainstNotAdminUser($response);
+        $success = $this->postRepository->updateApprovalStatus('comments', $request->routeParams['id'], Application::$app->user->getId(), false);
+        $this->redirect($response, $success, '/admin/comments', 'The comment was disapproved!', '/admin/comments');
+    }
+
+    public function showComments(Request $request, Response $response)
+    {
+        $this->guardAgainstNotAdminUser($response);
+        $this->setLayout('admin');
+        $comments = $this->commentRepository->getAll();
+        $authorIds = array_values(
+            array_unique(
+                array_map(
+                    fn (Comment $comment) => $comment->getAuthorId(),
+                    $comments
+                )
+            )
+        );
+        $authors = $this->userRepository->getByIds($authorIds);
+        return $this->render('admin/comments', ['comments' => $comments, 'authors' => $authors]);
+    }
+
+    public function deleteComment(Request $request, Response $response)
+    {
+        $this->guardAgainstNotAdminUser($response);
+        $success = $this->commentRepository->delete('comments', $request->routeParams['id']);
+        $this->redirect($response, $success, '/admin/comments', 'The comment was deleted!', '/admin/comments');
+    }
+
 }

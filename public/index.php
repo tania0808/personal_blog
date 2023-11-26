@@ -52,10 +52,16 @@ $app->router->get('/posts/delete/{id}/', [PostController::class, 'delete']);
 $app->router->post('/posts/{id}', [PostController::class, 'addComment']);
 $app->router->get('/posts/{postId}/comments/delete/{id}', [PostController::class, 'deleteComment']);
 
-// Admin
+// Admin posts
 $app->router->get('/admin/posts', [AdminController::class, 'index']);
-$app->router->get('/admin/posts/delete/{id}', [AdminController::class, 'delete']);
-$app->router->get('/admin/posts/approve/{id}', [AdminController::class, 'approve']);
-$app->router->get('/admin/posts/disapprove/{id}', [AdminController::class, 'disapprove']);
+$app->router->get('/admin/posts/approve/{id}', [AdminController::class, 'approvePost']);
+$app->router->get('/admin/posts/disapprove/{id}', [AdminController::class, 'disapprovePost']);
+$app->router->get('/admin/posts/delete/{id}', [AdminController::class, 'deletePost']);
+
+// Admin comments
+$app->router->get('/admin/comments', [AdminController::class, 'showComments']);
+$app->router->get('/admin/comments/approve/{id}', [AdminController::class, 'approveComment']);
+$app->router->get('/admin/comments/disapprove/{id}', [AdminController::class, 'disapproveComment']);
+$app->router->get('/admin/comments/delete/{id}', [AdminController::class, 'deleteComment']);
 
 $app->run();

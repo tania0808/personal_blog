@@ -24,26 +24,23 @@ class AuthController extends Controller {
 
     public function login(Request $request, Response $response)
     {
-        $fieldsToExclude = ['password','is_admin', 'created_at'];
+        $fieldsToExclude = ['password', 'created_at'];
         $loginFormValidator = new LoginFormValidator();
         $user = new User();
         $authError = '';
 
         if($request->isPost() && $loginFormValidator->validate($request)) {
             $user->loadData($request->getBody());
-            $foundUser = $this->userRepository->getByEmail($user->getEmail());
-
-            if (!$foundUser || !password_verify($user->getPassword(), $foundUser->password)) {
+            $foundUser = $this->userRepository->getByEmail($request->getBody()['email']);
+            if (!$foundUser || !password_verify($user->getPassword(), $foundUser->getPassword())) {
                 $authError = 'This combination of e-mail and password is incorrect';
             } else {
                 foreach ($fieldsToExclude as $field) {
-                    unset($foundUser->$field);
+                    $setterMethod = 'set' . ucfirst($field);
+                    $foundUser->{$setterMethod}('');
                 }
-
-                $user->loadData($foundUser);
-                Application::$app->session->setFlash('success', 'Your have successfully logged in !');
-                $response->redirect('/');
-                return Application::$app->login($user);
+                Application::$app->login($foundUser);
+                $this->handleSuccessRedirect($response, '/', 'Your have successfully logged in !');
             }
         }
 
