@@ -219,13 +219,6 @@ class PostController extends Controller {
         }
     }
 
-    #[NoReturn] private function handleSuccessRedirect(Response $response, ?string $location = '/', ?string $message = 'Your post was successfully created!'): void
-    {
-        Application::$app->session->setFlash('success', $message);
-        $response->redirect($location);
-        exit();
-    }
-
     private function guardAgainstNotAuthorizedUser(Post $post): void
     {
         if(Application::$app->session->get('user') === $post->getAuthorId()) {
@@ -236,4 +229,6 @@ class PostController extends Controller {
         Application::$app->response->redirect("/posts/{$post->getId()}");
         exit();
     }
+
+
 }

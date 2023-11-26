@@ -54,5 +54,8 @@ $app->router->get('/posts/{postId}/comments/delete/{id}', [PostController::class
 
 // Admin
 $app->router->get('/admin/posts', [AdminController::class, 'index']);
+$app->router->get('/admin/posts/delete/{id}', [AdminController::class, 'delete']);
+$app->router->get('/admin/posts/approve/{id}', [AdminController::class, 'approve']);
+$app->router->get('/admin/posts/disapprove/{id}', [AdminController::class, 'disapprove']);
 
 $app->run();

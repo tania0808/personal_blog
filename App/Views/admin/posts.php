@@ -67,7 +67,11 @@ $this->title = 'Admin';
                                         <?php echo date("F jS, Y", strtotime($post->getCreatedAt())); ?>
 									</td>
 									<td class="flex items-center px-6 py-4 gap-4">
-										<a href="/admin/posts/approve/<?php echo $post->getId(); ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><?php echo $post->getApprovedAt() !== null ? 'Disapprove' : 'Approve' ?></a>
+										<?php if($post->getApprovedAt() !== null) : ?>
+										<a href="/admin/posts/disapprove/<?php echo $post->getId(); ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Disapprove</a>
+										<?php else: ?>
+										<a href="/admin/posts/approve/<?php echo $post->getId(); ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</a>
+										<?php endif; ?>
 										<a href="/admin/posts/delete/<?php echo $post->getId(); ?>" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
 									</td>
 									<td class="px-6 py-4 text-center">

@@ -43,4 +43,37 @@ class AdminController extends Controller {
         $authors = $this->userRepository->getByIds($authorIds);
         return $this->render('admin/posts', ['posts' => $posts, 'authors' => $authors]);
     }
+
+    public function delete(Request $request, Response $response)
+    {
+        if($this->postRepository->delete($request->routeParams['id'])) {
+            $this->handleSuccessRedirect($response, '/admin/posts', 'The post was successfully deleted!');
+        }
+
+        Application::$app->session->setFlash('error', "An error occured !");
+        Application::$app->response->redirect("/admin/posts");
+        exit();
+    }
+
+    public function approve(Request $request, Response $response)
+    {
+        if($this->postRepository->approve($request->routeParams['id'], Application::$app->user->getId())) {
+            $this->handleSuccessRedirect($response, '/admin/posts', 'The post was approved!');
+        }
+
+        Application::$app->session->setFlash('error', "An error occured !");
+        Application::$app->response->redirect("/admin/posts");
+        exit();
+    }
+
+    public function disapprove(Request $request, Response $response)
+    {
+        if($this->postRepository->disapprove($request->routeParams['id'], Application::$app->user->getId())) {
+            $this->handleSuccessRedirect($response, '/admin/posts', 'The post was disapproved!');
+        }
+
+        Application::$app->session->setFlash('error', "An error occured !");
+        Application::$app->response->redirect("/admin/posts");
+        exit();
+    }
 }

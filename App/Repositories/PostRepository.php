@@ -91,4 +91,27 @@ class PostRepository extends Repository implements RepositoryInterface
         return $statement->execute([$id]);
     }
 
+    public function approve(int $postId, int $authorId): bool
+    {
+        $sql = <<<SQL
+            UPDATE posts
+            SET approved_at = now(), approved_by = :author_id
+            WHERE posts.id = :postId;
+        SQL;
+
+        $statement = $this->db->prepare($sql);
+        return $statement->execute(['postId' => $postId, 'author_id' => $authorId]);
+    }
+
+    public function disapprove(int $postId, int $authorId): bool
+    {
+        $sql = <<<SQL
+            UPDATE posts
+            SET approved_at = null, approved_by = :author_id
+            WHERE posts.id = :postId;
+        SQL;
+
+        $statement = $this->db->prepare($sql);
+        return $statement->execute(['postId' => $postId, 'author_id' => $authorId]);
+    }
 }
