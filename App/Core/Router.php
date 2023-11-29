@@ -64,7 +64,7 @@ class Router
             }
 
             // Convert route name into regex pattern
-            $routeRegex = "@^" . preg_replace_callback('/\{\w+?}/', fn($m) => isset($m[2]) ? "({$m[2]})" : '(\w+)', $route) . "$@";
+            $routeRegex = "@^" . preg_replace_callback('/\{\w+?}/', fn ($m) => isset($m[2]) ? "({$m[2]})" : '(\w+)', $route) . "$@";
 
             // Test and match current route against $routeRegex
             if (preg_match_all($routeRegex, $url, $valueMatches)) {

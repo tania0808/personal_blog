@@ -17,8 +17,8 @@ use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
 
-class AdminController extends Controller {
-
+class AdminController extends Controller
+{
     private UserRepository $userRepository;
     private PostRepository $postRepository;
     private CommentRepository $commentRepository;

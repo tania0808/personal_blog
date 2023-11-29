@@ -15,9 +15,9 @@ use App\Models\Post;
 use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
-use JetBrains\PhpStorm\NoReturn;
 
-class PostController extends Controller {
+class PostController extends Controller
+{
     private readonly PostRepository $postRepository;
     private readonly UserRepository $userRepository;
     private readonly CommentRepository $commentRepository;
@@ -81,7 +81,8 @@ class PostController extends Controller {
         ]);
     }
 
-    public function show(Request $request, Response $response) {
+    public function show(Request $request, Response $response)
+    {
         $postData = $this->getPostData($request);
 
         return $this->render('post/singlePost', [
@@ -137,7 +138,8 @@ class PostController extends Controller {
         return $this->render('post/newPost', ['post' => $post, 'errors' => []]);
     }
 
-    public function edit(Request $request, Response $response) {
+    public function edit(Request $request, Response $response)
+    {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
         $this->guardAgainstNotAuthorizedUser($response, $existingPost);
 
@@ -164,12 +166,12 @@ class PostController extends Controller {
         return $this->render('post/editPost', ['post' => $existingPost, 'errors' => []]);
     }
 
-    #[NoReturn] public function delete(Request $request, Response $response)
+    public function delete(Request $request, Response $response)
     {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
         $this->guardAgainstNotAuthorizedUser($response, $existingPost);
 
-        if($this->postRepository->delete('posts',$request->routeParams['id'])) {
+        if($this->postRepository->delete('posts', $request->routeParams['id'])) {
             $this->handleImageDelete($existingPost);
             $this->handleSuccessRedirect($response, '/posts', 'Your post was successfully deleted!');
         }
@@ -218,11 +220,11 @@ class PostController extends Controller {
 
     private function guardAgainstNotAuthorizedUser(Response $response, Post $post): void
     {
-        if(Application::$app->session->get('user')['id'] === $post->getAuthorId() || Application::$app->session->get('user')['is_admin'] ) {
+        if(Application::$app->session->get('user')['id'] === $post->getAuthorId() || Application::$app->session->get('user')['is_admin']) {
             return;
         }
 
-        $this->handleErrorRedirect($response,"/posts/{$post->getId()}", "You don't have the access to this page !");
+        $this->handleErrorRedirect($response, "/posts/{$post->getId()}", "You don't have the access to this page !");
     }
 
 

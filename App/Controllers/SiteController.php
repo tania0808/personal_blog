@@ -11,8 +11,8 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Service\EmailSender;
 
-class SiteController extends Controller {
-
+class SiteController extends Controller
+{
     public function home()
     {
         return $this->render('home');
