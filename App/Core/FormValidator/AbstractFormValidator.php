@@ -31,7 +31,7 @@ abstract class AbstractFormValidator
     }
 
 
-    public function addError (string $fieldName, string $message): void
+    public function addError(string $fieldName, string $message): void
     {
         $this->errors[$fieldName][] = $message;
     }

@@ -29,7 +29,8 @@ class Session
         return $_SESSION[self::FLASH_KEY][$key]['value'] ?? [];
     }
 
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         $_SESSION[$key] = $value;
     }
 

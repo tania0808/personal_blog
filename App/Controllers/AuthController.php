@@ -12,8 +12,8 @@ use App\Core\Response;
 use App\Models\User;
 use App\Repositories\UserRepository;
 
-class AuthController extends Controller {
-
+class AuthController extends Controller
+{
     private readonly UserRepository $userRepository;
 
     public function __construct()

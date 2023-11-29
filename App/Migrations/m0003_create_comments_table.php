@@ -1,6 +1,6 @@
 <?php
 
-use \App\Core\Application;
+use App\Core\Application;
 
 class m0003_create_comments_table
 {

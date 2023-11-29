@@ -38,7 +38,8 @@ class ImageUpload
      * @param $image
      */
 
-    public function __construct($image){
+    public function __construct($image)
+    {
         $this->image_name = time() . '_' . trim(basename($image['name']));
         $this->image_size = $image['size'];
         $this->image_type = $image['type'];
@@ -55,7 +56,7 @@ class ImageUpload
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
         $mime = finfo_file($finfo, $this->image_temp);
-        if(!in_array($mime, $this->allowed_image_types)){
+        if(!in_array($mime, $this->allowed_image_types)) {
             $this->setError('Only [ .jpeg, .jpg, .png, .webp and .gif ] files are allowed');
         }
 
@@ -69,21 +70,21 @@ class ImageUpload
 
     private function sizeValidation(): void
     {
-        if($this->image_size > $this->upload_max_size){
+        if($this->image_size > $this->upload_max_size) {
             $this->setError('File is bigger than 2MB');
         }
     }
 
     private function checkFile()
     {
-        if(file_exists($this->uploads_folder.$this->image_name)){
+        if(file_exists($this->uploads_folder.$this->image_name)) {
             $this->setError('File already exists in folder');
         }
     }
 
     public function moveFile()
     {
-        if(!move_uploaded_file($this->image_temp, $this->uploads_folder.$this->image_name)){
+        if(!move_uploaded_file($this->image_temp, $this->uploads_folder.$this->image_name)) {
             $this->setError('There was an error, please try again');
         }
     }

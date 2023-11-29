@@ -1,4 +1,6 @@
-<?php use App\Core\Application; ?>
+<?php use App\Core\Application;
+
+?>
 
 <!doctype html>
 <html lang="en">

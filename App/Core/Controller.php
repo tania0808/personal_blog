@@ -60,6 +60,6 @@ class Controller
             return;
         }
 
-        $this->handleErrorRedirect($response,"/", "You don't have the access to this page !");
+        $this->handleErrorRedirect($response, "/", "You don't have the access to this page !");
     }
 }
