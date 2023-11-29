@@ -5,3 +5,6 @@ RewriteRule ^ public%{REQUEST_URI} [L]
 
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteRule ^ index.php [QSA,L]
+
+php_value post_max_size 16M
+php_value upload_max_filesize 16M

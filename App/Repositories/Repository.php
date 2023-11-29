@@ -3,36 +3,39 @@
 namespace App\Repositories;
 
 use App\Core\Application;
+use App\Core\Database;
 
 class Repository
 {
-    public function prepare($sql): bool|\PDOStatement
+    protected readonly Database $db;
+
+    public function __construct()
     {
-        return Application::$app->db->pdo->prepare($sql);
+        $this->db = Application::$app->db;
     }
 
-    public function execute($statement, $params = [])
+    public function updateApprovalStatus(string $table, int $id, int $authorId, bool $approve): bool
     {
-        $statement->execute($params);
-        return $statement;
+        $approvedAt = $approve ? 'now()' : 'null';
+
+        $sql = <<<SQL
+            UPDATE $table
+            SET approved_at = $approvedAt, approved_by = :author_id
+            WHERE $table.id = :id;
+        SQL;
+
+        $statement = $this->db->prepare($sql);
+        return $statement->execute(['id' => $id, 'author_id' => $authorId]);
     }
 
-    public function fetchAll($statement)
+    public function delete(string $table, int $id): bool
     {
-        return $statement->fetchAll();
-    }
+        $sql = <<<SQL
+            DELETE FROM $table
+            WHERE $table.id = :id;
+        SQL;
 
-    protected function executeQuery($sql, $params = [])
-    {
-        $statement = $this->prepare($sql);
-
-        if (!empty($params)) {
-            foreach ($params as $key => $value) {
-                $statement->bindValue(":$key", $value);
-            }
-        }
-
-        $this->execute($statement);
-        return $this->fetchAll($statement);
+        $statement = $this->db->prepare($sql);
+        return $statement->execute([$id]);
     }
 }

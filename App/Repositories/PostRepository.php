@@ -2,32 +2,94 @@
 
 namespace App\Repositories;
 
-use App\Core\Application;
+use App\Models\Post;
 
 class PostRepository extends Repository
 {
-    public function all()
+    public function create(Post $post): bool
     {
+        $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (:author_id, :title, :body, :description, :image_name)");
 
-        $sql = <<<SQL
-            SELECT posts.*, users.first_name, users.last_name
-            FROM posts
-            INNER JOIN users ON posts.user_id = users.id;
-        SQL;
-
-        return $this->executeQuery($sql);
+        return $stmt->execute(['author_id' => $post->getAuthorId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'description' => $post->getDescription(), 'image_name' => $post->getImage_name()]);
     }
 
-    public function getOne($id)
+    public function getAll(): false|array
     {
-
         $sql = <<<SQL
-            SELECT posts.*, users.first_name, users.last_name
-            FROM posts
-            INNER JOIN users ON posts.user_id = users.id
-            WHERE posts.id = $id;
+            SELECT * FROM posts
         SQL;
 
-        return $this->executeQuery($sql);
+        $statement = $this->db->prepare($sql);
+        $statement->execute();
+        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+
+        return $statement->fetchAll();
+    }
+
+    public function getAllApproved(): false|array
+    {
+        $sql = <<<SQL
+            SELECT * FROM posts
+            WHERE approved_at IS NOT NULL 
+        SQL;
+
+        $statement = $this->db->prepare($sql);
+        $statement->execute();
+        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+
+        return $statement->fetchAll();
+    }
+
+    public function getById(int $postId)
+    {
+        $sql = <<<SQL
+            SELECT * FROM posts
+            WHERE posts.id = :postId;
+        SQL;
+
+        $statement = $this->db->prepare($sql);
+        $statement->execute([$postId]);
+        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+
+        return $statement->fetch();
+    }
+
+    public function update($id, Post $post): bool
+    {
+        $attributes = ['title', 'description', 'body', 'image_name'];
+
+        $setParams = array_map(
+            function ($attr) use ($post) {
+                $getterMethod = 'get' . ucfirst($attr);
+                $value = $post->{$getterMethod}();
+
+                // Conditionally include image_name in the SET clause
+                if ($attr !== 'image_name' || $value !== null) {
+                    return "$attr = :$attr";
+                }
+
+                return null;
+            },
+            $attributes
+        );
+
+        // Remove null values from the setParams array
+        $setParams = array_filter($setParams);
+
+        $setClause = implode(', ', $setParams);
+        $sql = "UPDATE posts SET $setClause WHERE id = :id";
+
+        $data = [];
+
+        foreach ($attributes as $attribute) {
+            $getterMethod = 'get' . ucfirst($attribute);
+            $data[":$attribute"] = $post->{$getterMethod}();
+        }
+
+        $data[':id'] = $id;
+
+        $statement = $this->db->prepare($sql);
+
+        return $statement->execute($data);
     }
 }

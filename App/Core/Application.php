@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Models\User;
+use App\Repositories\UserRepository;
 
 class Application
 {
@@ -16,7 +17,7 @@ class Application
     public View $view;
     public Database $db;
 
-    public ?DbModel $user;
+    public ?User $user;
 
     public static Application $app;
     public ?Controller $controller = null;
@@ -34,10 +35,16 @@ class Application
 
         $this->db = new Database($config['db']);
 
-        $primaryKeyValue = $this->session->get('user');
+        $userSession = $this->session->get('user');
+
+        if (is_array($userSession) && isset($userSession['id'])) {
+            $primaryKeyValue = $userSession['id'];
+        } else {
+            $primaryKeyValue = null; // or some default value
+        }
+
         if ($primaryKeyValue) {
-            $primaryKey = $this->userClass::primaryKey();
-            $this->user = $this->userClass::findOne([$primaryKey => $primaryKeyValue]);
+            $this->user = (new UserRepository())->getById($primaryKeyValue);
         } else {
             $this->user = null;
         }
@@ -46,6 +53,10 @@ class Application
     public static function isGuest()
     {
         return !self::$app->user;
+    }
+    public static function isAdmin()
+    {
+        return self::$app->user->getIs_admin();
     }
 
     public function run()
@@ -69,12 +80,10 @@ class Application
         $this->controller = $controller;
     }
 
-    public function login (DbModel $user)
+    public function login (User $user)
     {
         $this->user = $user;
-        $primaryKey = $user->primaryKey();
-        $primaryKeyValue = $user->{$primaryKey};
-        $this->session->set('user', $primaryKeyValue);
+        $this->session->set('user', ['id' => $user->getId(), 'is_admin' => $user->getIs_admin()]);
         return true;
     }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\AdminController;
 use App\Controllers\AuthController;
 use App\Controllers\SiteController;
 use App\Controllers\PostController;
@@ -44,5 +45,23 @@ $app->router->get('/post/create', [PostController::class, 'store']);
 $app->router->post('/post/create', [PostController::class, 'store']);
 $app->router->get('/posts/{id}', [PostController::class, 'show']);
 $app->router->get('/posts/edit/{id}/', [PostController::class, 'edit']);
+$app->router->post('/posts/edit/{id}/', [PostController::class, 'edit']);
+$app->router->get('/posts/delete/{id}/', [PostController::class, 'delete']);
+
+// Comment
+$app->router->post('/posts/{id}', [PostController::class, 'addComment']);
+$app->router->get('/posts/{postId}/comments/delete/{id}', [PostController::class, 'deleteComment']);
+
+// Admin posts
+$app->router->get('/admin/posts', [AdminController::class, 'index']);
+$app->router->get('/admin/posts/approve/{id}', [AdminController::class, 'approvePost']);
+$app->router->get('/admin/posts/disapprove/{id}', [AdminController::class, 'disapprovePost']);
+$app->router->get('/admin/posts/delete/{id}', [AdminController::class, 'deletePost']);
+
+// Admin comments
+$app->router->get('/admin/comments', [AdminController::class, 'showComments']);
+$app->router->get('/admin/comments/approve/{id}', [AdminController::class, 'approveComment']);
+$app->router->get('/admin/comments/disapprove/{id}', [AdminController::class, 'disapproveComment']);
+$app->router->get('/admin/comments/delete/{id}', [AdminController::class, 'deleteComment']);
 
 $app->run();
