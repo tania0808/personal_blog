@@ -104,5 +104,4 @@ class AdminController extends Controller
         $success = $this->commentRepository->delete('comments', $request->routeParams['id']);
         $this->redirect($response, $success, '/admin/comments', 'The comment was deleted!', '/admin/comments');
     }
-
 }

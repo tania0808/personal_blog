@@ -36,7 +36,7 @@ use App\Models\User;
 							</p>
                         <?php endif; ?>
 					</div>
-                    <?php if(isset($authError)) : ?>
+                    <?php if(!empty($authError)) : ?>
 						<p class="mt-2 text-sm text-red-600">
 							<span class="font-medium"><?php echo $authError; ?></span><br>
 						</p>

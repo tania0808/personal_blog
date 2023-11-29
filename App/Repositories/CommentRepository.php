@@ -17,7 +17,6 @@ class CommentRepository extends Repository
     {
         $sql = <<<SQL
             SELECT * FROM comments
-            WHERE approved_at IS NOT NULL
             ORDER BY created_at DESC;
         SQL;
 
@@ -30,7 +29,6 @@ class CommentRepository extends Repository
 
     public function getAllByPostId($postId): false|array
     {
-        // TODO add "WHERE approved_by IS NOT NULL" after implementing admin page
         $sql = <<<SQL
             SELECT * FROM comments
             WHERE comments.post_id = :postId

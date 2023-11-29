@@ -14,7 +14,7 @@ $this->title = 'Admin';
 				<!-- card header -->
 				<div class="px-9 pt-2 flex justify-between items-stretch flex-wrap min-h-[70px] pb-0 bg-transparent">
 					<h3 class="flex flex-col items-start justify-center m-2 ml-0 font-medium text-xl/tight text-dark">
-						<span class="mr-3 font-semibold text-dark">Posts</span>
+						<span class="mr-3 font-semibold text-dark">Comments</span>
 					</h3>
 				</div>
 				<div class="relative overflow-x-auto">
