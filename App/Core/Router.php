@@ -21,12 +21,12 @@ class Router
     }
 
 
-    public function get($path, $callback)
+    public function get($path, $callback): void
     {
         $this->routes['get'][$path] = $callback;
     }
 
-    public function post($path, $callback)
+    public function post($path, $callback): void
     {
         $this->routes['post'][$path] = $callback;
     }
@@ -64,7 +64,11 @@ class Router
             }
 
             // Convert route name into regex pattern
-            $routeRegex = "@^" . preg_replace_callback('/\{\w+?}/', fn ($m) => isset($m[2]) ? "({$m[2]})" : '(\w+)', $route) . "$@";
+            $routeRegex = "@^" . preg_replace_callback(
+                '/\{\w+?}/',
+                fn ($m) => isset($m[2]) ? "({$m[2]})" : '(\w+)',
+                $route
+            ) . "$@";
 
             // Test and match current route against $routeRegex
             if (preg_match_all($routeRegex, $url, $valueMatches)) {
@@ -87,15 +91,15 @@ class Router
         $method = $this->request->method();
         $callback = $this->routes[$method][$path] ?? false;
 
-        if(!$callback) {
+        if (!$callback) {
             $callback = $this->getCallback();
 
-            if($callback === false) {
+            if ($callback === false) {
                 throw new NotFoundException();
             }
         }
 
-        if(is_string($callback)) {
+        if (is_string($callback)) {
             return Application::$app->view->renderView($callback);
         }
 

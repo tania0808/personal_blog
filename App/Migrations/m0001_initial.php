@@ -4,7 +4,7 @@ use App\Core\Application;
 
 class m0001_initial
 {
-    public function up()
+    public function up(): void
     {
         $db = Application::$app->db;
 
@@ -23,7 +23,7 @@ class m0001_initial
         $db->pdo->exec($SQL);
     }
 
-    public function down()
+    public function down(): void
     {
         $db = Application::$app->db;
 

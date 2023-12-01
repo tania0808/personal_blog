@@ -8,9 +8,19 @@ class PostRepository extends Repository
 {
     public function create(Post $post): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO posts (author_id, title, body, description, image_name) VALUES (:author_id, :title, :body, :description, :image_name)");
+        $sql = <<<SQL
+            INSERT INTO posts (author_id, title, body, description, image_name) 
+            VALUES (:author_id, :title, :body, :description, :image_name);
+        SQL;
+        $stmt = $this->db->prepare($sql);
 
-        return $stmt->execute(['author_id' => $post->getAuthorId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'description' => $post->getDescription(), 'image_name' => $post->getImage_name()]);
+        return $stmt->execute([
+            'author_id' => $post->getAuthorId(),
+            'title' => $post->getTitle(),
+            'body' => $post->getBody(),
+            'description' => $post->getDescription(),
+            'image_name' => $post->getImage_name()
+        ]);
     }
 
     public function getAll(): false|array
@@ -77,7 +87,12 @@ class PostRepository extends Repository
         $setParams = array_filter($setParams);
 
         $setClause = implode(', ', $setParams);
-        $sql = "UPDATE posts SET $setClause WHERE id = :id";
+
+        $sql = <<<SQL
+            UPDATE posts 
+            SET $setClause 
+            WHERE id = :id;
+        SQL;
 
         $data = [];
 

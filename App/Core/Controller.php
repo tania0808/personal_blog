@@ -3,7 +3,6 @@
 namespace App\Core;
 
 use App\Core\Middlewares\BaseMiddleware;
-use App\Models\Post;
 use JetBrains\PhpStorm\NoReturn;
 
 class Controller
@@ -13,16 +12,16 @@ class Controller
 
     /** @var array BaseMiddleware */
     protected array $middlewares = [];
-    public function setLayout($layout)
+    public function setLayout($layout): void
     {
         $this->layout = $layout;
     }
-    public function render($view, $params = [])
+    public function render($view, $params = []): array|false|string
     {
         return Application::$app->view->renderView($view, $params);
     }
 
-    public function registerMiddleware(BaseMiddleware $middleware)
+    public function registerMiddleware(BaseMiddleware $middleware): void
     {
         $this->middlewares[] = $middleware;
     }
@@ -32,22 +31,33 @@ class Controller
         return $this->middlewares;
     }
 
-    protected function handleSuccessRedirect(Response $response, ?string $location = '/', ?string $message = 'Your post was successfully created!'): void
-    {
+    #[NoReturn] protected function handleSuccessRedirect(
+        Response $response,
+        ?string $location = '/',
+        ?string $message = 'Your post was successfully created!'
+    ): void {
         Application::$app->session->setFlash('success', $message);
         $response->redirect($location);
         exit();
     }
-    protected function handleErrorRedirect(Response $response, ?string $location = '/', ?string $message = "An error occured !"): void
-    {
+    #[NoReturn] protected function handleErrorRedirect(
+        Response $response,
+        ?string $location = '/',
+        ?string $message = "An error occured !"
+    ): void {
         Application::$app->session->setFlash('error', $message);
         $response->redirect($location);
         exit();
     }
 
-    protected function redirect(Response $response, $success, $successRedirection, $successMessage, $errorRedirection)
-    {
-        if($success) {
+    #[NoReturn] protected function redirect(
+        Response $response,
+        $success,
+        $successRedirection,
+        $successMessage,
+        $errorRedirection
+    ): void {
+        if ($success) {
             $this->handleSuccessRedirect($response, $successRedirection, $successMessage);
         } else {
             $this->handleErrorRedirect($response, $errorRedirection);
@@ -56,7 +66,7 @@ class Controller
 
     protected function guardAgainstNotAdminUser(Response $response): void
     {
-        if(Application::isAdmin()) {
+        if (Application::isAdmin()) {
             return;
         }
 
