@@ -64,7 +64,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = $this->postRepository->getAll();
+        $posts = $this->postRepository->getAllApproved();
         $authorIds = array_values(
             array_unique(
                 array_map(
@@ -226,6 +226,4 @@ class PostController extends Controller
 
         $this->handleErrorRedirect($response, "/posts/{$post->getId()}", "You don't have the access to this page !");
     }
-
-
 }

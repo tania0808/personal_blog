@@ -29,26 +29,31 @@ class AuthController extends Controller
         $user = new User();
         $authError = '';
 
-        if($request->isPost() && $loginFormValidator->validate($request)) {
+        if ($request->isPost() && $loginFormValidator->validate($request)) {
             $user->loadData($request->getBody());
             $foundUser = $this->userRepository->getByEmail($request->getBody()['email']);
             if (!$foundUser || !password_verify($user->getPassword(), $foundUser->getPassword())) {
                 $authError = 'This combination of e-mail and password is incorrect';
-            } else {
-                foreach ($fieldsToExclude as $field) {
-                    $setterMethod = 'set' . ucfirst($field);
-                    $foundUser->{$setterMethod}('');
-                }
-                Application::$app->login($foundUser);
-                $this->handleSuccessRedirect($response, '/', 'Your have successfully logged in !');
+                return $this->render('auth/login', [
+                    'user' => $user,
+                    'errors' => $loginFormValidator->getErrors(),
+                    'authError' => $authError
+                ]);
             }
+
+            foreach ($fieldsToExclude as $field) {
+                $setterMethod = 'set' . ucfirst($field);
+                $foundUser->{$setterMethod}('');
+            }
+            Application::$app->login($foundUser);
+            $this->handleSuccessRedirect($response, '/', 'Your have successfully logged in !');
         }
 
         $this->setLayout('auth');
         return $this->render('auth/login', [
             'user' => $user,
-            'errors' => $loginFormValidator->getErrors(),
-            'authError' => $authError
+            'errors' => [],
+            'authError' => '',
         ]);
     }
     public function register(Request $request, Response $response)
@@ -57,7 +62,7 @@ class AuthController extends Controller
         $registerFormValidator = new RegisterFormValidator();
         $user = new User();
 
-        if($request->isPost()) {
+        if ($request->isPost()) {
             $user->loadData($request->getBody());
 
             if ($registerFormValidator->validate($request) && $this->userRepository->create($user)) {
