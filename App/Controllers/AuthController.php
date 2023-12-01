@@ -18,7 +18,6 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware(['profile']));
         $this->userRepository = new UserRepository();
     }
 
@@ -50,6 +49,7 @@ class AuthController extends Controller
         }
 
         $this->setLayout('auth');
+
         return $this->render('auth/login', [
             'user' => $user,
             'errors' => [],
@@ -87,10 +87,5 @@ class AuthController extends Controller
     {
         Application::$app->logout();
         $response->redirect('/');
-    }
-
-    public function profile()
-    {
-        return $this->render('admin/profile');
     }
 }

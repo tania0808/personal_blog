@@ -8,9 +8,17 @@ class CommentRepository extends Repository
 {
     public function create(Comment $comment): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO comments (author_id, post_id, content) VALUES (:author_id, :post_id, :content)");
+        $sql = <<<SQL
+            INSERT INTO comments (author_id, post_id, content) 
+            VALUES (:author_id, :post_id, :content);
+        SQL;
+        $stmt = $this->db->prepare($sql);
 
-        return $stmt->execute(['author_id' => $comment->getAuthorId(), 'post_id' => $comment->getPostId(), 'content' => $comment->getContent()]);
+        return $stmt->execute([
+            'author_id' => $comment->getAuthorId(),
+            'post_id' => $comment->getPostId(),
+            'content' => $comment->getContent()
+        ]);
     }
 
     public function getAll(): false|array

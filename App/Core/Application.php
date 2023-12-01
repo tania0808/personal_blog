@@ -50,16 +50,16 @@ class Application
         }
     }
 
-    public static function isGuest()
+    public static function isGuest(): bool
     {
         return !self::$app->user;
     }
-    public static function isAdmin()
+    public static function isAdmin(): bool
     {
         return self::$app->user->getIs_admin();
     }
 
-    public function run()
+    public function run(): void
     {
         try {
             echo $this->router->resolve();
@@ -80,7 +80,7 @@ class Application
         $this->controller = $controller;
     }
 
-    public function login(User $user)
+    public function login(User $user): true
     {
         $this->user = $user;
         $this->session->set('user', ['id' => $user->getId(), 'is_admin' => $user->getIs_admin()]);

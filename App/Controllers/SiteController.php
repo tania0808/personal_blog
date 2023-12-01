@@ -25,9 +25,14 @@ class SiteController extends Controller
         $contactFormValues = new ContactForm();
         $contactFormValidator = new ContactFormValidator();
 
-        if($request->isPost() && $contactFormValidator->validate($request)) {
+        if ($request->isPost() && $contactFormValidator->validate($request)) {
             $contactFormValues->loadData($request->getBody());
-            $emailSender->send($contactFormValues->getEmail(), $contactFormValues->getName(), $contactFormValues->getSubject(), $contactFormValues->getBody());
+            $emailSender->send(
+                $contactFormValues->getEmail(),
+                $contactFormValues->getName(),
+                $contactFormValues->getSubject(),
+                $contactFormValues->getBody()
+            );
 
             Application::$app->session->setFlash('success', 'Your email was successfully sent !');
             Application::$app->response->redirect('/');

@@ -48,6 +48,4 @@ class ContactForm extends Model
     {
         $this->body = $body;
     }
-
-
 }

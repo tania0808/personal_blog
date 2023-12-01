@@ -44,9 +44,14 @@ class PostController extends Controller
         $errors = $commentFormValidator->getErrors();
 
         if ($isValidForm && $this->commentRepository->create($comment)) {
-            $this->handleSuccessRedirect($response, "/posts/{$request->routeParams['id']}", 'Your comment has been successfully submitted for validation');
+            $this->handleSuccessRedirect(
+                $response,
+                "/posts/{$request->routeParams['id']}",
+                'Your comment has been successfully submitted for validation'
+            );
         }
-        return $this->render("post/singlePost", [
+
+        return $this->render('post/singlePost', [
             'errors' => $errors,
             'comment' => $comment,
             'post' => $postData['post'],
@@ -59,7 +64,13 @@ class PostController extends Controller
     public function deleteComment(Request $request, Response $response): void
     {
         $success = $this->commentRepository->delete('comments', $request->routeParams['id']);
-        $this->redirect($response, $success, "/posts/{$request->routeParams['postId']}", 'Your comment was successfully deleted!', '/posts');
+        $this->redirect(
+            $response,
+            $success,
+            "/posts/{$request->routeParams['postId']}",
+            'Your comment was successfully deleted!',
+            '/posts'
+        );
     }
 
     public function index()
@@ -131,11 +142,19 @@ class PostController extends Controller
 
             if ($isValidForm && empty($errors['image_name']) && $this->postRepository->create($post)) {
                 $this->handleImageMove($post, $imageUpload);
-                $this->handleSuccessRedirect($response, "/posts");
+                $this->handleSuccessRedirect($response, '/posts');
             }
-            return $this->render('post/newPost', ['post' => $post, 'errors' => $errors]);
+
+            return $this->render('post/newPost', [
+                'post' => $post,
+                'errors' => $errors
+            ]);
         }
-        return $this->render('post/newPost', ['post' => $post, 'errors' => []]);
+
+        return $this->render('post/newPost', [
+            'post' => $post,
+            'errors' => []
+        ]);
     }
 
     public function edit(Request $request, Response $response)
@@ -151,19 +170,31 @@ class PostController extends Controller
             $errors = $postFormValidator->getErrors();
             $imageUpload = $this->handleImageUpload($newPost, $errors, $existingPost);
 
-            if ($isValidForm && empty($errors['image_name']) && $this->postRepository->update($existingPost->getId(), $newPost)) {
-                if(!empty($_FILES['imageName']['name'])) {
+            if ($isValidForm
+                && empty($errors['image_name'])
+                && $this->postRepository->update($existingPost->getId(), $newPost)
+            ) {
+                if (!empty($_FILES['imageName']['name'])) {
                     $this->handleImageMove($newPost, $imageUpload);
                     $this->handleImageDelete($existingPost);
                 }
-                $this->handleSuccessRedirect($response, "/posts/{$existingPost->getId()}", 'Your post was successfully edited!');
+                $this->handleSuccessRedirect(
+                    $response,
+                    "/posts/{$existingPost->getId()}",
+                    'Your post was successfully edited!'
+                );
             }
 
-            return $this->render("post/editPost", ['post' => $newPost, 'errors' => $errors]);
-
+            return $this->render('post/editPost', [
+                'post' => $newPost,
+                'errors' => $errors
+            ]);
         }
 
-        return $this->render('post/editPost', ['post' => $existingPost, 'errors' => []]);
+        return $this->render('post/editPost', [
+            'post' => $existingPost,
+            'errors' => []
+        ]);
     }
 
     public function delete(Request $request, Response $response)
@@ -171,12 +202,12 @@ class PostController extends Controller
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
         $this->guardAgainstNotAuthorizedUser($response, $existingPost);
 
-        if($this->postRepository->delete('posts', $request->routeParams['id'])) {
+        if ($this->postRepository->delete('posts', $request->routeParams['id'])) {
             $this->handleImageDelete($existingPost);
             $this->handleSuccessRedirect($response, '/posts', 'Your post was successfully deleted!');
         }
 
-        $this->handleErrorRedirect($response, "/posts");
+        $this->handleErrorRedirect($response, '/posts');
     }
 
     public function loadPostDataFromRequest(Request $request): Post
@@ -190,15 +221,17 @@ class PostController extends Controller
 
     public function handleImageUpload(Post $post, array &$errors, ?Post $existingPost = null)
     {
-        if(!empty($_FILES['imageName']['name'])) {
+        if (!empty($_FILES['imageName']['name'])) {
             $imageUpload = new ImageUpload($_FILES['imageName']);
             $errors['image_name'] = $imageUpload->getErrors();
             $post->setImageName($imageUpload->image_name);
+
             return $imageUpload;
         }
-        if($existingPost !== null) {
+        if (null !== $existingPost) {
             $post->setImageName($existingPost->getImage_name());
         }
+
         return null;
     }
 
@@ -207,23 +240,28 @@ class PostController extends Controller
         $uploads_folder = __DIR__.'/../../public/images/';
 
         if (!empty($existingPost->getImage_name())) {
-            unlink($uploads_folder . $existingPost->getImage_name());
+            unlink($uploads_folder.$existingPost->getImage_name());
         }
     }
 
     private function handleImageMove(Post $post, ?ImageUpload $imageUpload = null): void
     {
-        if($post->getImage_name() !== null && $imageUpload !== null) {
+        if (null !== $post->getImage_name() && null !== $imageUpload) {
             $imageUpload->moveFile();
         }
     }
 
     private function guardAgainstNotAuthorizedUser(Response $response, Post $post): void
     {
-        if(Application::$app->session->get('user')['id'] === $post->getAuthorId() || Application::$app->session->get('user')['is_admin']) {
+        if (Application::$app->session->get('user')['id'] === $post->getAuthorId()
+            || Application::$app->session->get('user')['is_admin']) {
             return;
         }
 
-        $this->handleErrorRedirect($response, "/posts/{$post->getId()}", "You don't have the access to this page !");
+        $this->handleErrorRedirect(
+            $response,
+            "/posts/{$post->getId()}",
+            "You don't have the access to this page !"
+        );
     }
 }
