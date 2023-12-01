@@ -6,7 +6,6 @@ use App\Core\Application;
 use App\Core\Controller;
 use App\Core\FormValidator\LoginFormValidator;
 use App\Core\FormValidator\RegisterFormValidator;
-use App\Core\Middlewares\AuthMiddleware;
 use App\Core\Request;
 use App\Core\Response;
 use App\Models\User;

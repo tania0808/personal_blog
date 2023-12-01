@@ -50,7 +50,7 @@ class Controller
         exit();
     }
 
-    protected function redirect(
+    #[NoReturn] protected function redirect(
         Response $response,
         $success,
         $successRedirection,

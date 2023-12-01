@@ -11,6 +11,7 @@ use App\Models\Post;
 use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
+use JetBrains\PhpStorm\NoReturn;
 
 class AdminController extends Controller
 {
@@ -25,7 +26,7 @@ class AdminController extends Controller
         $this->commentRepository = new CommentRepository();
     }
 
-    public function index(Request $request, Response $response)
+    public function index(Request $request, Response $response): false|array|string
     {
         $this->guardAgainstNotAdminUser($response);
         $this->setLayout("admin");
@@ -47,7 +48,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function deletePost(Request $request, Response $response)
+    #[NoReturn] public function deletePost(Request $request, Response $response): void
     {
         $this->guardAgainstNotAdminUser($response);
         $success = $this->postRepository->delete('posts', $request->routeParams['id']);
@@ -61,7 +62,7 @@ class AdminController extends Controller
         );
     }
 
-    public function approvePost(Request $request, Response $response)
+    #[NoReturn] public function approvePost(Request $request, Response $response): void
     {
         $this->guardAgainstNotAdminUser($response);
         $success = $this->postRepository->updateApprovalStatus(
@@ -80,7 +81,7 @@ class AdminController extends Controller
         );
     }
 
-    public function disapprovePost(Request $request, Response $response)
+    #[NoReturn] public function disapprovePost(Request $request, Response $response): void
     {
         $this->guardAgainstNotAdminUser($response);
         $success = $this->postRepository->updateApprovalStatus(
@@ -98,7 +99,7 @@ class AdminController extends Controller
             '/admin/posts'
         );
     }
-    public function approveComment(Request $request, Response $response)
+    #[NoReturn] public function approveComment(Request $request, Response $response): void
     {
         $this->guardAgainstNotAdminUser($response);
         $success = $this->postRepository->updateApprovalStatus(
@@ -117,7 +118,7 @@ class AdminController extends Controller
         );
     }
 
-    public function disapproveComment(Request $request, Response $response)
+    #[NoReturn] public function disapproveComment(Request $request, Response $response): void
     {
         $this->guardAgainstNotAdminUser($response);
         $success = $this->postRepository->updateApprovalStatus(
@@ -136,7 +137,7 @@ class AdminController extends Controller
         );
     }
 
-    public function showComments(Request $request, Response $response)
+    public function showComments(Request $request, Response $response): false|array|string
     {
         $this->guardAgainstNotAdminUser($response);
         $this->setLayout('admin');
@@ -157,7 +158,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function deleteComment(Request $request, Response $response)
+    #[NoReturn] public function deleteComment(Request $request, Response $response): void
     {
         $this->guardAgainstNotAdminUser($response);
         $success = $this->commentRepository->delete('comments', $request->routeParams['id']);

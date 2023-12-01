@@ -15,6 +15,7 @@ use App\Models\Post;
 use App\Repositories\CommentRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
+use JetBrains\PhpStorm\NoReturn;
 
 class PostController extends Controller
 {
@@ -30,7 +31,7 @@ class PostController extends Controller
         $this->commentRepository = new CommentRepository();
     }
 
-    public function addComment(Request $request, Response $response)
+    public function addComment(Request $request, Response $response): false|array|string
     {
         $postData = $this->getPostData($request);
         $comment = new Comment();
@@ -61,7 +62,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function deleteComment(Request $request, Response $response): void
+    #[NoReturn] public function deleteComment(Request $request, Response $response): void
     {
         $success = $this->commentRepository->delete('comments', $request->routeParams['id']);
         $this->redirect(
@@ -73,7 +74,7 @@ class PostController extends Controller
         );
     }
 
-    public function index()
+    public function index(): false|array|string
     {
         $posts = $this->postRepository->getAllApproved();
         $authorIds = array_values(
@@ -92,7 +93,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function show(Request $request, Response $response)
+    public function show(Request $request, Response $response): false|array|string
     {
         $postData = $this->getPostData($request);
 
@@ -104,7 +105,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function getPostData(Request $request)
+    public function getPostData(Request $request): array
     {
         $post = $this->postRepository->getById($request->routeParams['id']);
         $author = $this->userRepository->getById($post->getAuthorId());
@@ -129,7 +130,7 @@ class PostController extends Controller
         ];
     }
 
-    public function store(Request $request, Response $response)
+    public function store(Request $request, Response $response): false|array|string
     {
         $post = $this->loadPostDataFromRequest($request);
         $postFormValidator = new PostFormValidator();
@@ -157,7 +158,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function edit(Request $request, Response $response)
+    public function edit(Request $request, Response $response): false|array|string
     {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
         $this->guardAgainstNotAuthorizedUser($response, $existingPost);
@@ -197,7 +198,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function delete(Request $request, Response $response)
+    #[NoReturn] public function delete(Request $request, Response $response): void
     {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
         $this->guardAgainstNotAuthorizedUser($response, $existingPost);
@@ -219,7 +220,7 @@ class PostController extends Controller
         return $post;
     }
 
-    public function handleImageUpload(Post $post, array &$errors, ?Post $existingPost = null)
+    public function handleImageUpload(Post $post, array &$errors, ?Post $existingPost = null): ?ImageUpload
     {
         if (!empty($_FILES['imageName']['name'])) {
             $imageUpload = new ImageUpload($_FILES['imageName']);

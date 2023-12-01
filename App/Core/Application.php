@@ -80,7 +80,7 @@ class Application
         $this->controller = $controller;
     }
 
-    public function login(User $user): true
+    public function login(User $user): bool
     {
         $this->user = $user;
         $this->session->set('user', ['id' => $user->getId(), 'is_admin' => $user->getIs_admin()]);
