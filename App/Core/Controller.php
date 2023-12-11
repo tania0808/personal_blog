@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use App\Core\Middlewares\BaseMiddleware;
 use JetBrains\PhpStorm\NoReturn;
 
 class Controller
@@ -10,8 +9,6 @@ class Controller
     public string $layout = 'main';
     public string $action = '';
 
-    /** @var array BaseMiddleware */
-    protected array $middlewares = [];
     public function setLayout($layout): void
     {
         $this->layout = $layout;

@@ -17,7 +17,7 @@ class UniqueRule extends AbstractRule
         $statement->bindValue(":attr", $value);
         $statement->execute();
         $record = $statement->fetchObject();
-        if($record) {
+        if ($record) {
             return false;
         }
         return true;

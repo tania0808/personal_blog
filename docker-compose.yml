@@ -3,6 +3,7 @@ services:
   # PHP Application
   php:
     build: '.'
+    container_name: 'personal_blog_tania_php'
     ports:
       - "8180:80"
     volumes:
@@ -11,6 +12,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:13
+    container_name: 'personal_blog_tania_pg'
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres

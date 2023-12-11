@@ -12,17 +12,23 @@
 git clone git@github.com:tania0808/personal_blog.git
 ```
 
-2. Install dependencies:
+2. Configure your environment variables (clone the .env.example file)
 ```
-composer install
-```
-3. Configure your environment variables (clone the .env.example file)
+DB_DSN = pgsql:host=172.17.0.1;port=5432;dbname=postgres
+DB_USER = postgres
+DB_PASSWORD = postgres
 
-4. Run the application:
+GMAIL_HOST = 
+GMAIL_PORT = 
+GMAIL_USER = 
+GMAIL_PASSWORD = 
+```
+
+3. Run the application:
 ```
 make install
 ```
-5. Go to this url:
+4. Go to this url:
 ```
 http://localhost:8180/
 ```
