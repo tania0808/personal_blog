@@ -15,10 +15,11 @@ use App\Models\User;
                 </h1>
                 <form class="space-y-4 md:space-y-6" action="" method="post">
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                        <input type="text" name="email" value="<?php echo $user->getEmail() ?>"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                                      focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email
+                            <input type="text" name="email" value="<?php echo $user->getEmail() ?>"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                                          focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                        </label>
                         <?php if (isset($errors['email'])) : ?>
                             <p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['email'] as $error) : ?>
@@ -28,10 +29,11 @@ use App\Models\User;
                         <?php endif; ?>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                        <input type="password" name="password" value="<?php echo $user->getPassword() ?>"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                                      focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password
+                            <input type="password" name="password" value="<?php echo $user->getPassword() ?>"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                                          focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                        </label>
                         <?php if (isset($errors['password'])) : ?>
                             <p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['password'] as $error) : ?>

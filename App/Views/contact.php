@@ -1,4 +1,6 @@
-<?php use App\Core\ContactForm;
+<?php
+
+use App\Core\ContactForm;
 
 $this->title = 'Contact';
 
@@ -11,10 +13,11 @@ $this->title = 'Contact';
                 <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900">Contact Me</h2>
                 <form class="space-y-4 md:space-y-6" action="" method="post">
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900" for="subject">Subject</label>
-                        <input type="text" name="subject" value="<?php echo $model->getSubject() ?>"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                                        focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        <label class="block mb-2 text-sm font-medium text-gray-900" for="subject">Subject
+                            <input type="text" name="subject" value="<?php echo $model->getSubject() ?>"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                                            focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        </label>
                         <?php if (isset($errors['subject'])) : ?>
                             <p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['subject'] as $error) : ?>
@@ -24,10 +27,11 @@ $this->title = 'Contact';
                         <?php endif; ?>
                     </div>
                     <div>
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name</label>
-                        <input type="text" name="name" value="<?php echo $model->getName() ?>"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                                      focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Name
+                            <input type="text" name="name" value="<?php echo $model->getName() ?>"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                                          focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        </label>
                         <?php if (isset($errors['name'])) : ?>
                             <p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['name'] as $error) : ?>
@@ -37,10 +41,11 @@ $this->title = 'Contact';
                         <?php endif; ?>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900" for="email">Email</label>
-                        <input type="text" name="email" value="<?php echo $model->getEmail() ?>"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                                      focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        <label class="block mb-2 text-sm font-medium text-gray-900" for="email">Email
+                            <input type="text" name="email" value="<?php echo $model->getEmail() ?>"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                                          focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        </label>
                         <?php if (isset($errors['email'])) : ?>
                             <p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['email'] as $error) : ?>
@@ -50,10 +55,11 @@ $this->title = 'Contact';
                         <?php endif; ?>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Body</label>
-                        <input type="text" name="body" value="<?php echo $model->getBody() ?>"
-                               class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                                      focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        <label class="block mb-2 text-sm font-medium text-gray-900" for="body">Body
+                            <input type="text" name="body" value="<?php echo $model->getBody() ?>"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                                          focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+                        </label>
                         <?php if (isset($errors['body'])) : ?>
                             <p class="mt-2 text-sm text-red-600">
                                 <?php foreach ($errors['body'] as $error) : ?>

@@ -54,7 +54,6 @@ The project involves developing a professional blog website with two main groups
 
 ## Development Constraints
 - Development without WordPress, building everything from scratch.
-- Use Bootstrap for styling.
 - Integrate external libraries via Composer if needed.
 - Mobile responsiveness is mandatory.
 - Consider using Twig for templating (recommended but not obligatory).

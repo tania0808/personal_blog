@@ -1,4 +1,5 @@
 <?php
+
 use App\Models\Post;
 
 $this->title = 'New post';
@@ -13,8 +14,7 @@ $this->title = 'New post';
 <div class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
     <form class="space-y-4 md:space-y-6" method="post" enctype="multipart/form-data">
         <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900">Title</label>
-            <label>
+            <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Title
                 <input
                         type="text"
                         name="title"
@@ -31,13 +31,13 @@ $this->title = 'New post';
             <?php endif; ?>
         </div>
         <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900">Description</label>
-            <input
-                    type="text"
-                    name="description"
-                    value="<?php echo $post->getDescription() ?>"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
-                           focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Description
+                <input  type="text"
+                        name="description"
+                        value="<?php echo $post->getDescription() ?>"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg
+                               focus:border-blue-500 focus:outline-none focus:ring block w-full p-2.5">
+            </label>
             <?php if (isset($errors['description'])) : ?>
                 <p class="mt-2 text-sm text-red-600">
                     <?php foreach ($errors['description'] as $error) : ?>
@@ -48,14 +48,13 @@ $this->title = 'New post';
         </div>
 
         <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 ">Body</label>
-            <textarea
-                    name="body"
-                    rows="10"
-                    class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300
-                    rounded-md focus:border-blue-500 focus:outline-none focus:ring">
-                <?php echo $post->getBody() ?>
-            </textarea>
+            <label for="body" class="block mb-2 text-sm font-medium text-gray-900 ">Body
+                <textarea
+                        name="body"
+                        rows="10"
+                        class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300
+                        rounded-md focus:border-blue-500 focus:outline-none focus:ring"><?php echo $post->getBody() ?></textarea>
+            </label>
             <?php if (isset($errors['body'])) : ?>
                 <p class="mt-2 text-sm text-red-600">
                     <?php foreach ($errors['body'] as $error) : ?>
@@ -77,20 +76,23 @@ $this->title = 'New post';
                     <label
                             for="file-upload"
                             class="text-center relative cursor-pointer bg-white rounded-md font-medium text-indigo-600
-                                   hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                   hover:text-indigo-500 focus-within:outline-none focus-within:ring-2
+                                   focus-within:ring-offset-2 focus-within:ring-indigo-500">
                         <input
                                 type="file"
                                 name="imageName"
                                 value="<?php echo $post->getImage_name() ?>"
-                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <?php if (isset($errors['image_name'])) : ?>
-                            <p class="mt-2 text-sm text-red-600">
-                                <?php foreach ($errors['image_name'] as $error) : ?>
-                                    <span class="font-medium"><?php echo $error; ?></span><br>
-                                <?php endforeach; ?>
-                            </p>
-                        <?php endif; ?>
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                                       file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50
+                                       file:text-blue-700 hover:file:bg-blue-100">
                     </label>
+                    <?php if (isset($errors['image_name'])) : ?>
+                        <p class="mt-2 text-sm text-red-600">
+                            <?php foreach ($errors['image_name'] as $error) : ?>
+                                <span class="font-medium"><?php echo $error; ?></span><br>
+                            <?php endforeach; ?>
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
