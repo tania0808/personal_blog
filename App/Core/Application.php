@@ -4,6 +4,7 @@ namespace App\Core;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Exception;
 
 class Application
 {
@@ -56,6 +57,10 @@ class Application
     }
     public static function isAdmin(): bool
     {
+        if (!self::$app->user) {
+            return false;
+        }
+
         return self::$app->user->getIs_admin();
     }
 
@@ -63,21 +68,12 @@ class Application
     {
         try {
             echo $this->router->resolve();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->response->setStatusCode($e->getCode());
             echo $this->view->renderView('_error', [
                 'exception' => $e
             ]);
         }
-    }
-
-    public function getController(): Controller
-    {
-        return $this->controller;
-    }
-    public function setController(Controller $controller): void
-    {
-        $this->controller = $controller;
     }
 
     public function login(User $user): bool

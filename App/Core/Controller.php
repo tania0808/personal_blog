@@ -21,16 +21,6 @@ class Controller
         return Application::$app->view->renderView($view, $params);
     }
 
-    public function registerMiddleware(BaseMiddleware $middleware): void
-    {
-        $this->middlewares[] = $middleware;
-    }
-
-    public function getMiddlewares(): array
-    {
-        return $this->middlewares;
-    }
-
     #[NoReturn] protected function handleSuccessRedirect(
         Response $response,
         ?string $location = '/',
@@ -62,6 +52,15 @@ class Controller
         } else {
             $this->handleErrorRedirect($response, $errorRedirection);
         }
+    }
+
+    protected function guardAgainstNotAuthenticatedUser(Response $response): void
+    {
+        if (!Application::isGuest()) {
+            return;
+        }
+
+        $this->handleErrorRedirect($response, "/", "You must be authenticated to access to this page !");
     }
 
     protected function guardAgainstNotAdminUser(Response $response): void

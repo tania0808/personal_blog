@@ -20,12 +20,11 @@ class AuthController extends Controller
         $this->userRepository = new UserRepository();
     }
 
-    public function login(Request $request, Response $response)
+    public function login(Request $request, Response $response): false|array|string
     {
         $fieldsToExclude = ['password', 'created_at'];
         $loginFormValidator = new LoginFormValidator();
         $user = new User();
-        $authError = '';
 
         if ($request->isPost() && $loginFormValidator->validate($request)) {
             $user->loadData($request->getBody());
@@ -82,7 +81,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request, Response $response)
+    public function logout(Request $request, Response $response): void
     {
         Application::$app->logout();
         $response->redirect('/');

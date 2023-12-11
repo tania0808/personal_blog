@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Post;
+use PDO;
 
 class PostRepository extends Repository
 {
@@ -31,7 +32,7 @@ class PostRepository extends Repository
 
         $statement = $this->db->prepare($sql);
         $statement->execute();
-        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+        $statement->setFetchMode(PDO::FETCH_CLASS, Post::class);
 
         return $statement->fetchAll();
     }
@@ -45,7 +46,7 @@ class PostRepository extends Repository
 
         $statement = $this->db->prepare($sql);
         $statement->execute();
-        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+        $statement->setFetchMode(PDO::FETCH_CLASS, Post::class);
 
         return $statement->fetchAll();
     }
@@ -59,7 +60,7 @@ class PostRepository extends Repository
 
         $statement = $this->db->prepare($sql);
         $statement->execute([$postId]);
-        $statement->setFetchMode(\PDO::FETCH_CLASS, Post::class);
+        $statement->setFetchMode(PDO::FETCH_CLASS, Post::class);
 
         return $statement->fetch();
     }

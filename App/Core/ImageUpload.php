@@ -4,13 +4,13 @@ namespace App\Core;
 
 class ImageUpload
 {
-    public $image_name;
-    private $image_type;
-    private $image_size;
-    private $image_temp;
-    public $uploads_folder = __DIR__ . '/../../public/images/';
-    private $upload_max_size = 2097152;
-    private $allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    public string $image_name;
+    private string $image_type;
+    private int $image_size;
+    private string $image_temp;
+    public string $uploads_folder = __DIR__ . '/../../public/images/';
+    private int $upload_max_size = 2097152;
+    private array $allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
     private array $errors = [];
 

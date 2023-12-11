@@ -1,5 +1,4 @@
 <?php
-
 use App\Core\Application;
 
 class m0001_initial
