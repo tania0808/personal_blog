@@ -48,9 +48,9 @@ SQL;
         $password3 = password_hash('admin123', PASSWORD_BCRYPT);
 
         // Binding parameters for users table
-        $statementUsers->bindParam(':password1', $password1, PDO::PARAM_STR);
-        $statementUsers->bindParam(':password2', $password2, PDO::PARAM_STR);
-        $statementUsers->bindParam(':password3', $password3, PDO::PARAM_STR);
+        $statementUsers->bindParam(':password1', $password1);
+        $statementUsers->bindParam(':password2', $password2);
+        $statementUsers->bindParam(':password3', $password3);
 
         // Execute statements
         $statementUsers->execute();

@@ -85,6 +85,9 @@ class Router
         return false;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function resolve()
     {
         $path = $this->request->getPath();

@@ -29,7 +29,7 @@ class m0002_create_posts_table
     {
         $db = Application::$app->db;
 
-        $SQL = "DROP TABLE posts;";
+        $SQL = 'DROP TABLE posts;';
 
         $db->pdo->exec($SQL);
     }

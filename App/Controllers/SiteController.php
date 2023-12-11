@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Application;
 use App\Core\ContactForm;
 use App\Core\Controller;
+use App\Core\Exception\MailNotSentException;
 use App\Core\FormValidator\ContactFormValidator;
 use App\Core\Request;
 use App\Core\Service\EmailSender;
@@ -16,6 +17,9 @@ class SiteController extends Controller
         return $this->render('home');
     }
 
+    /**
+     * @throws MailNotSentException
+     */
     public function contact(Request $request)
     {
         $emailSender = new EmailSender();

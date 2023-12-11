@@ -65,8 +65,6 @@ include:
   - name: PhpShortOpenTagInspection
   - name: PhpSingleStatementWithBracesInspection
   - name: PhpTraditionalSyntaxArrayLiteralInspection
-  - name: PhpUnnecessaryCurlyVarSyntaxInspection
-  - name: PhpUnnecessaryDoubleQuotesInspection
   - name: PhpUnnecessaryLeadingBackslashInUseStatementInspection
   - name: PhpUnnecessaryParenthesesInspection
   - name: PhpVariableVariableInspection
