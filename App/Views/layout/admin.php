@@ -115,12 +115,6 @@
                 </a>
             </li>
             <li>
-                <a href="/admin/users" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <i class="fa-solid fa-users"></i>
-                    <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-                </a>
-            </li>
-            <li>
                 <a href="/logout" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span class="flex-1 ms-3 whitespace-nowrap">Log Out</span>

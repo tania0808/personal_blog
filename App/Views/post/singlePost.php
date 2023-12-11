@@ -27,7 +27,7 @@ $currentUser = Application::$app->session->get('user');
                         <?php echo $author->getFullName(); ?>
                     </h2>
                     <!-- Dropdown menu start -->
-                    <?php if ($post->getAuthorId() === $currentUser['id']) : ?>
+                    <?php if (Application::$app->user !== null && $post->getAuthorId() === $currentUser['id']) : ?>
                     <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="btn w-10" type="button">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </button>
@@ -75,15 +75,14 @@ $currentUser = Application::$app->session->get('user');
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-lg lg:text-2xl font-bold text-gray-900">Discussion (<?php echo count($comments)?>)</h2>
         </div>
+        <?php if (Application::$app->user !== null) : ?>
         <form class="mb-6 max-w-3xl" action="" method="post">
             <div class="py-2 px-4 mb-2 bg-white rounded-lg rounded-t-lg border border-gray-200">
                 <label for="comment" class="sr-only">Your comment</label>
                 <textarea id="comment" rows="6"
                           name="content"
                           class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
-                          placeholder="Write a comment...">
-                    <?php echo isset($comment) ? $comment->getContent() : ''; ?>
-                </textarea>
+                          placeholder="Write a comment..."><?php echo isset($comment) ? $comment->getContent() : ''; ?></textarea>
             </div>
             <?php if (isset($errors['content'])) : ?>
                 <p class="mt-2 text-sm text-red-600">
@@ -98,6 +97,16 @@ $currentUser = Application::$app->session->get('user');
                 Post comment
             </button>
         </form>
+        <?php else : ?>
+            <div class="flex items-center p-4 mb-4 text-sm text-blue-800
+                        rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                <i class="fa-solid fa-circle-info"></i>
+                <div>
+                    <span class="font-medium ml-4">You must be authenticated to add the comment</span>
+                </div>
+            </div>
+        <?php endif ?>
+
         <?php foreach ($comments as $comment) : ?>
             <article class="p-6 text-base bg-white rounded-lg">
 
@@ -113,14 +122,14 @@ $currentUser = Application::$app->session->get('user');
                             <?php echo date("F jS, Y", strtotime($comment->getCreatedAt())); ?>
                         </p>
                     </div>
-                    <button id="dropdownComment1Button" data-dropdown-toggle="dropdownComment1"
-                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white
-                                   rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50"
-                            type="button">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                        <span class="sr-only">Comment settings</span>
-                    </button>
-                    <?php if ($comment->getAuthorId() === $currentUser['id']) : ?>
+                    <?php if (Application::$app->user !== null && $comment->getAuthorId() === $currentUser['id']) : ?>
+                        <button id="dropdownComment1Button" data-dropdown-toggle="dropdownComment1"
+                                class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white
+                                       rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50"
+                                type="button">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                            <span class="sr-only">Comment settings</span>
+                        </button>
                         <!-- Dropdown menu -->
                         <div id="dropdownComment1"
                              class="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow">

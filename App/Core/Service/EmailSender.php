@@ -34,7 +34,7 @@ class EmailSender
             $mail->addAddress($_ENV['GMAIL_USER']);
 
             $mail->addReplyTo($email);
-            $mail->isHTML(true);
+            $mail->isHTML();
             //$mail->msgHTML(file_get_contents('contents.html'), __DIR__);
             $mail->Subject = $subject;
             $mail->Body    = $body;

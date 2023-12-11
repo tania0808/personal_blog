@@ -23,9 +23,9 @@ class UserRepository extends Repository
         return $stmt->fetch();
     }
 
-    public function getByIds(array $ids)
+    public function getByIds(array $ids): false|array
     {
-        if(count($ids) < 1) {
+        if (count($ids) < 1) {
             return false;
         }
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
@@ -51,7 +51,17 @@ class UserRepository extends Repository
 
     public function create(User $user): bool
     {
-        $stmt = $this->db->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (:first_name, :last_name, :email, :password)");
-        return $stmt->execute(['first_name' => $user->getFirstName(), 'last_name' => $user->getLastName(), 'email' => $user->getEmail(), 'password' => password_hash($user->getPassword(), PASSWORD_DEFAULT)]);
+        $sql = <<<SQL
+            INSERT INTO users (first_name, last_name, email, password) 
+            VALUES (:first_name, :last_name, :email, :password)
+        SQL;
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'email' => $user->getEmail(),
+            'password' => password_hash($user->getPassword(), PASSWORD_DEFAULT)
+        ]);
     }
 }

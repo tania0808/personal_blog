@@ -1,5 +1,4 @@
 <?php
-
 use App\Core\Application;
 
 class m0002_create_posts_table

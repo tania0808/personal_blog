@@ -5,19 +5,16 @@ namespace App\Controllers;
 use App\Core\Application;
 use App\Core\ContactForm;
 use App\Core\Controller;
-use App\Core\Exception\MailNotSentException;
 use App\Core\FormValidator\ContactFormValidator;
 use App\Core\Request;
-use App\Core\Response;
 use App\Core\Service\EmailSender;
 
 class SiteController extends Controller
 {
-    public function home()
+    public function home(): false|array|string
     {
         return $this->render('home');
     }
-
 
     public function contact(Request $request)
     {

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Comment;
+use PDO;
 
 class CommentRepository extends Repository
 {
@@ -30,7 +31,7 @@ class CommentRepository extends Repository
 
         $statement = $this->db->prepare($sql);
         $statement->execute();
-        $statement->setFetchMode(\PDO::FETCH_CLASS, Comment::class);
+        $statement->setFetchMode(PDO::FETCH_CLASS, Comment::class);
 
         return $statement->fetchAll();
     }
@@ -46,7 +47,7 @@ class CommentRepository extends Repository
 
         $statement = $this->db->prepare($sql);
         $statement->execute([$postId]);
-        $statement->setFetchMode(\PDO::FETCH_CLASS, Comment::class);
+        $statement->setFetchMode(PDO::FETCH_CLASS, Comment::class);
 
         return $statement->fetchAll();
     }

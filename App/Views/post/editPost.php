@@ -52,9 +52,7 @@ $this->title = 'Edit a post';
                     name="body"
                     rows="10"
                     class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md
-                        focus:border-blue-500 focus:outline-none focus:ring">
-                <?php echo $post->getBody() ?>
-            </textarea>
+                        focus:border-blue-500 focus:outline-none focus:ring"><?php echo $post->getBody() ?></textarea>
             <?php if (isset($errors['body'])) : ?>
                 <p class="mt-2 text-sm text-red-600">
                     <?php foreach ($errors['body'] as $error) : ?>

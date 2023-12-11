@@ -4,10 +4,10 @@ namespace App\Controllers;
 
 use App\Core\Application;
 use App\Core\Controller;
+use App\Core\Exception\NotFoundException;
 use App\Core\FormValidator\CommentFormValidator;
 use App\Core\FormValidator\PostFormValidator;
 use App\Core\ImageUpload;
-use App\Core\Middlewares\AuthMiddleware;
 use App\Core\Request;
 use App\Core\Response;
 use App\Models\Comment;
@@ -25,12 +25,14 @@ class PostController extends Controller
 
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware(['edit']));
         $this->postRepository = new PostRepository();
         $this->userRepository = new UserRepository();
         $this->commentRepository = new CommentRepository();
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function addComment(Request $request, Response $response): false|array|string
     {
         $postData = $this->getPostData($request);
@@ -93,7 +95,10 @@ class PostController extends Controller
         ]);
     }
 
-    public function show(Request $request, Response $response): false|array|string
+    /**
+     * @throws NotFoundException
+     */
+    public function show(Request $request): false|array|string
     {
         $postData = $this->getPostData($request);
 
@@ -105,9 +110,15 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function getPostData(Request $request): array
     {
         $post = $this->postRepository->getById($request->routeParams['id']);
+        if (!$post) {
+            throw new NotFoundException();
+        }
         $author = $this->userRepository->getById($post->getAuthorId());
         $comments = $this->commentRepository->getAllByPostId($post->getId());
 
@@ -132,9 +143,9 @@ class PostController extends Controller
 
     public function store(Request $request, Response $response): false|array|string
     {
+        $this->guardAgainstNotAuthenticatedUser($response);
         $post = $this->loadPostDataFromRequest($request);
         $postFormValidator = new PostFormValidator();
-        $errors = [];
 
         if ($request->isPost()) {
             $isValidForm = $postFormValidator->validate($request);
@@ -161,6 +172,13 @@ class PostController extends Controller
     public function edit(Request $request, Response $response): false|array|string
     {
         $existingPost = $this->postRepository->getById($request->routeParams['id']);
+        if (!$existingPost) {
+            $this->handleErrorRedirect(
+                $response,
+                '/posts',
+                'Not Found !'
+            );
+        }
         $this->guardAgainstNotAuthorizedUser($response, $existingPost);
 
         if ($request->isPost()) {
@@ -254,8 +272,9 @@ class PostController extends Controller
 
     private function guardAgainstNotAuthorizedUser(Response $response, Post $post): void
     {
-        if (Application::$app->session->get('user')['id'] === $post->getAuthorId()
-            || Application::$app->session->get('user')['is_admin']) {
+        if (Application::$app->user !== null &&
+            (Application::$app->session->get('user')['id'] === $post->getAuthorId()
+            || Application::$app->session->get('user')['is_admin'])) {
             return;
         }
 

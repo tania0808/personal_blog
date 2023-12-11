@@ -6,7 +6,6 @@ use App\Controllers\SiteController;
 use App\Controllers\PostController;
 use App\Core\Application;
 use App\Models\User;
-use App\Repositories\PostRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));

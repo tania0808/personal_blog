@@ -1,18 +1,22 @@
-<?php use App\Models\Post;
+<?php use App\Core\Application;
+use App\Models\Post;
 use App\Models\User;
 
 $this->title = 'All posts';
 
 /** @var $posts Post[] */
 /** @var $authors User[] */
+
 ?>
 
 <div class="heading text-center font-bold text-2xl m-5 text-gray-800">All posts</div>
+<?php if (Application::$app->user !== null) : ?>
 <a href="/post/create"
    class="text-white ml-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium
           rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none ">
     Add new
 </a>
+<?php endif; ?>
 
 <section class="flex flex-row flex-wrap mx-auto">
     <!-- Card Component -->
