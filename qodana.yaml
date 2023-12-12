@@ -36,9 +36,7 @@ include:
   - name: PhpMissingReturnTypeInspection
   - name: PhpDynamicFieldDeclarationInspection
   - name: PhpUnusedAliasInspection
-  - name: PhpUnusedLocalVariableInspection
   - name: PhpUnhandledExceptionInspection
-  - name: PhpUnusedParameterInspection
   - name: HtmlFormInputWithoutLabel
   - name: HtmlRequiredAltAttribute
   - name: HtmlRequiredLangAttribute
@@ -67,7 +65,6 @@ include:
   - name: PhpTraditionalSyntaxArrayLiteralInspection
   - name: PhpUnnecessaryLeadingBackslashInUseStatementInspection
   - name: PhpUnnecessaryParenthesesInspection
-  - name: PhpVariableVariableInspection
   - name: PhpVariableIsUsedOnlyInClosureInspection
   - name: PhpComposerDuplicatedRequirementInspection
   - name: PhpNotInstalledPackagesInspection

@@ -59,7 +59,8 @@ class Router
             }
 
             // Find all route names from route and save in $routeNames
-            if (preg_match_all('/\{(\w+)?}/', $route, $matches)) {
+            // We are searching for a string which starts with curly brances
+            if (preg_match_all('/\{(\w+)}/', $route, $matches)) {
                 $routeNames = $matches[1];
             }
 
@@ -77,6 +78,7 @@ class Router
                     $values[] = $valueMatches[$i][0];
                 }
                 $routeParams = array_combine($routeNames, $values);
+
                 $this->request->setRouteParams($routeParams);
                 return $callback;
             }
