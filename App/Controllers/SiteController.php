@@ -24,10 +24,10 @@ class SiteController extends Controller
     {
         $emailSender = new EmailSender();
         $contactFormValues = new ContactForm();
+        $contactFormValues->loadData($request->getBody());
         $contactFormValidator = new ContactFormValidator();
 
         if ($request->isPost() && $contactFormValidator->validate($request)) {
-            $contactFormValues->loadData($request->getBody());
             $emailSender->send(
                 $contactFormValues->getEmail(),
                 $contactFormValues->getName(),
