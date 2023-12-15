@@ -1,4 +1,6 @@
-<?php use App\Core\Application;
+<?php
+
+use App\Core\Application;
 use App\Models\Post;
 use App\Models\User;
 
@@ -18,6 +20,9 @@ $this->title = 'All posts';
 </a>
 <?php endif; ?>
 
+<?php if (count($posts) === 0) : ?>
+    <div class="font-bold text-2xl m-5 text-gray-800">No posts yet</div>
+<?php endif; ?>
 <section class="flex flex-row flex-wrap mx-auto">
     <!-- Card Component -->
 <?php foreach ($posts as $post) : ?>

@@ -1,5 +1,3 @@
-# Test technique - Meeting Hub
-
 ## Prerequisites
 #### You need to have installed on your machine:
 
