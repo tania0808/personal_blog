@@ -77,14 +77,14 @@ class ImageUpload
 
     private function checkFile(): void
     {
-        if (file_exists($this->uploads_folder.$this->image_name)) {
+        if (file_exists($this->uploads_folder . $this->image_name)) {
             $this->setError('File already exists in folder');
         }
     }
 
     public function moveFile(): void
     {
-        if (!move_uploaded_file($this->image_temp, $this->uploads_folder.$this->image_name)) {
+        if (!move_uploaded_file($this->image_temp, $this->uploads_folder . $this->image_name)) {
             $this->setError('There was an error, please try again');
         }
     }

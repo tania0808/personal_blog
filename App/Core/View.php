@@ -20,7 +20,7 @@ class View
             $layout = Application::$app->controller->layout;
         }
         ob_start();
-        include_once Application::$ROOT_DIR."/App/Views/layout/$layout.php";
+        include_once Application::$ROOT_DIR . "/App/Views/layout/$layout.php";
         return ob_get_clean();
     }
 
@@ -31,7 +31,7 @@ class View
         }
 
         ob_start();
-        include_once Application::$ROOT_DIR."/App/Views/$view.php";
+        include_once Application::$ROOT_DIR . "/App/Views/$view.php";
         return ob_get_clean();
     }
 }

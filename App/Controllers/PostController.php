@@ -189,7 +189,8 @@ class PostController extends Controller
             $errors = $postFormValidator->getErrors();
             $imageUpload = $this->handleImageUpload($newPost, $errors, $existingPost);
 
-            if ($isValidForm
+            if (
+                $isValidForm
                 && empty($errors['image_name'])
                 && $this->postRepository->update($existingPost->getId(), $newPost)
             ) {
@@ -256,10 +257,10 @@ class PostController extends Controller
 
     public function handleImageDelete(Post $existingPost): void
     {
-        $uploads_folder = __DIR__.'/../../public/images/';
+        $uploads_folder = __DIR__ . '/../../public/images/';
 
         if (!empty($existingPost->getImage_name())) {
-            unlink($uploads_folder.$existingPost->getImage_name());
+            unlink($uploads_folder . $existingPost->getImage_name());
         }
     }
 
@@ -272,9 +273,11 @@ class PostController extends Controller
 
     private function guardAgainstNotAuthorizedUser(Response $response, Post $post): void
     {
-        if (Application::$app->user !== null &&
-            (Application::$app->session->get('user')['id'] === $post->getAuthorId()
-            || Application::$app->session->get('user')['is_admin'])) {
+        if (
+            Application::$app->user !== null &&
+            (Application::$app->session->get('user')['id'] === $post->getAuthorId() ||
+            Application::$app->session->get('user')['is_admin'])
+        ) {
             return;
         }
 
